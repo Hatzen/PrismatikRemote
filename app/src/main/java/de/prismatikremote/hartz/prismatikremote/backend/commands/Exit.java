@@ -1,21 +1,21 @@
-package de.prismatikremote.hartz.prismatikremote.backend.command;
+package de.prismatikremote.hartz.prismatikremote.backend.commands;
 
 import de.prismatikremote.hartz.prismatikremote.backend.Communicator;
 
 /**
  * Created by kaiha on 08.04.2017.
  */
-public class Unlock extends Communication {
+public class Exit extends Communication {
 
-    public static final String RESPOND_SUCCESS = "unlock:success";
+    public static final String RESPOND_SUCCESS = "Goodbye!";
 
     @Override
     public String getCommand() {
-        return "unlock";
+        return "exit";
     }
 
     @Override
     public boolean onRespond(String response, Communicator.OnCompleteListener listener ) {
-        return response.equals(Unlock.RESPOND_SUCCESS);
+        return response.equals(Exit.RESPOND_SUCCESS);
     }
 }

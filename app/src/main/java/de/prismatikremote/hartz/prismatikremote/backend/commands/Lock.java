@@ -1,9 +1,6 @@
-package de.prismatikremote.hartz.prismatikremote.backend.command;
-
-import android.util.Log;
+package de.prismatikremote.hartz.prismatikremote.backend.commands;
 
 import de.prismatikremote.hartz.prismatikremote.backend.Communicator;
-import de.prismatikremote.hartz.prismatikremote.backend.RemoteState;
 
 /**
  * Created by kaiha on 08.04.2017.

@@ -9,15 +9,13 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import de.prismatikremote.hartz.prismatikremote.MainActivity;
-import de.prismatikremote.hartz.prismatikremote.backend.command.ApiKey;
-import de.prismatikremote.hartz.prismatikremote.backend.command.Communication;
-import de.prismatikremote.hartz.prismatikremote.backend.command.Exit;
-import de.prismatikremote.hartz.prismatikremote.backend.command.GetStatus;
-import de.prismatikremote.hartz.prismatikremote.backend.command.Lock;
-import de.prismatikremote.hartz.prismatikremote.backend.command.ToggleStatus;
-import de.prismatikremote.hartz.prismatikremote.backend.command.TurnOff;
-import de.prismatikremote.hartz.prismatikremote.backend.command.Unlock;
+import de.prismatikremote.hartz.prismatikremote.backend.commands.ApiKey;
+import de.prismatikremote.hartz.prismatikremote.backend.commands.Communication;
+import de.prismatikremote.hartz.prismatikremote.backend.commands.Exit;
+import de.prismatikremote.hartz.prismatikremote.backend.commands.GetStatus;
+import de.prismatikremote.hartz.prismatikremote.backend.commands.Lock;
+import de.prismatikremote.hartz.prismatikremote.backend.commands.ToggleStatus;
+import de.prismatikremote.hartz.prismatikremote.backend.commands.Unlock;
 
 /**
  * Created by kaiha on 08.04.2017.
@@ -76,7 +74,7 @@ public class Communicator {
     private void startThread(ArrayList<Communication> commands, OnCompleteListener listener) {
         surroundLock(commands);
         sourroundStartAndEnd(commands);
-        new Thread(new Executer(commands, listener)).start();
+        new Thread(new Executor(commands, listener)).start();
     }
 
     private void surroundLock(ArrayList<Communication> commands) {
@@ -91,38 +89,14 @@ public class Communicator {
         commands.add(new Exit());
     }
 
-    //TODO: remove
-    /* example code
-    public static void main(String[] args) throws IOException {
-
-        Socket pingSocket = null;
-        PrintWriter out = null;
-        BufferedReader in = null;
-
-        try {
-            pingSocket = new Socket("servername", 23);
-            out = new PrintWriter(pingSocket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(pingSocket.getInputStream()));
-        } catch (IOException e) {
-            return;
-        }
-
-        out.println("ping");
-        System.out.println(in.readLine());
-        out.close();
-        in.close();
-        pingSocket.close();
-    }*/
-
-
     /**
      * Executes a list of commands.
      */
-    private class Executer implements Runnable {
+    private class Executor implements Runnable {
         private ArrayList<Communication> commands;
         private OnCompleteListener listener;
 
-        public Executer(ArrayList<Communication> commands, OnCompleteListener listener ) {
+        Executor(ArrayList<Communication> commands, OnCompleteListener listener ) {
             this.commands = commands;
             this.listener = listener;
         }

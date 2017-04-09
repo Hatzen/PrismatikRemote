@@ -1,4 +1,4 @@
-package de.prismatikremote.hartz.prismatikremote.backend.command;
+package de.prismatikremote.hartz.prismatikremote.backend.commands;
 
 import de.prismatikremote.hartz.prismatikremote.backend.Communicator;
 

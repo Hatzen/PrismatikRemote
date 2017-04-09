@@ -1,4 +1,4 @@
-package de.prismatikremote.hartz.prismatikremote.backend.command;
+package de.prismatikremote.hartz.prismatikremote.backend.commands;
 
 /**
  * Created by kaiha on 08.04.2017.

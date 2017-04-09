@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Prismatik Remote</string>
+
+    // Onboarding
+    <string name="serverIpEditText">Ip Address</string>
+    <string name="serverPortEditText">Port</string>
+    <string name="apiKeyEditText">API Key</string>
+    <string name="saveButton">Save</string>
+    <string name="scanButton">Scan</string>
 </resources>
