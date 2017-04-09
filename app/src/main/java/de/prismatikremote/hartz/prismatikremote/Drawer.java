@@ -1,5 +1,6 @@
 package de.prismatikremote.hartz.prismatikremote;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -16,7 +17,7 @@ import android.widget.ListView;
  * Created by kaiha on 09.04.2017.
  */
 
-public class Drawer extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class Drawer extends AppCompatActivity {
 
     private ListView mDrawerList;
     private ArrayAdapter<String> mAdapter;
@@ -38,7 +39,23 @@ public class Drawer extends AppCompatActivity implements AdapterView.OnItemClick
         String[] osArray = { "Start", "Profiles","Notifications", "Console", "Settings"};
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
         mDrawerList.setAdapter(mAdapter);
-        mDrawerList.setOnItemClickListener(this);
+        final Context context = this;
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch(position) {
+                    case 0:
+                        startActivity(new Intent(context, MainActivity.class));
+                        break;
+                    case 1:
+                        startActivity(new Intent(context, Profiles.class));
+                        break;
+                    case 3:
+                        startActivity(new Intent(context, Console.class));
+                        break;
+                }
+            }
+        });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -84,20 +101,5 @@ public class Drawer extends AppCompatActivity implements AdapterView.OnItemClick
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        switch(position) {
-            case 0:
-                startActivity(new Intent(this, MainActivity.class));
-                break;
-            case 1:
-                startActivity(new Intent(this, Profiles.class));
-                break;
-            case 3:
-                startActivity(new Intent(this, Console.class));
-                break;
-        }
     }
 }
