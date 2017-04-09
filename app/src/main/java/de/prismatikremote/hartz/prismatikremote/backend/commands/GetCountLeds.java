@@ -16,7 +16,7 @@ public class GetCountLeds extends Communication {
     public boolean onRespond(String response, Communicator.OnCompleteListener listener ) {
         String prefix = "countleds:";
         if (response.contains(prefix)) {
-            int ledCount = Integer.valueOf(response.substring(response.indexOf(prefix)+1));
+            int ledCount = Integer.valueOf(response.substring(response.indexOf(prefix)+prefix.length()+1));
             RemoteState.getInstance().setCountLeds(ledCount);
             return true;
         }

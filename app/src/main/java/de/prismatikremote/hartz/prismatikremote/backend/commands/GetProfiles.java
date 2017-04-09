@@ -19,7 +19,7 @@ public class GetProfiles extends Communication {
     public boolean onRespond(String response, Communicator.OnCompleteListener listener ) {
         String prefix = "profiles:";
         if (response.contains(prefix)) {
-            response = response.substring(response.indexOf(prefix)+1);
+            response = response.substring(response.indexOf(prefix)+prefix.length()+1);
             ArrayList<String> list = new ArrayList(Arrays.asList(response.split(";")));
             RemoteState.getInstance().setProfiles(list);
             return true;

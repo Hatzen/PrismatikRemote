@@ -1,8 +1,9 @@
 package de.prismatikremote.hartz.prismatikremote;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 
@@ -13,14 +14,16 @@ import de.prismatikremote.hartz.prismatikremote.backend.commands.GetStatus;
 import de.prismatikremote.hartz.prismatikremote.helper.UiHelper;
 
 //TODO: Main-feature http://www.androiddevelopersolutions.com/2015/05/android-read-status-bar-notification.html
-public class MainActivity extends AppCompatActivity implements Communicator.OnCompleteListener, View.OnClickListener {
+public class MainActivity extends Drawer implements Communicator.OnCompleteListener, View.OnClickListener {
 
     private ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mDrawerLayout.addView(inflater.inflate(R.layout.activity_main, null));
 
         Button powerButton = (Button) findViewById(R.id.toggle_power);
         powerButton.setText(RemoteState.getInstance().getStatus() == RemoteState.Status.ON ? "On" : "Off");

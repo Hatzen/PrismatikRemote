@@ -1,7 +1,8 @@
 package de.prismatikremote.hartz.prismatikremote;
 
+import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -11,19 +12,24 @@ import de.prismatikremote.hartz.prismatikremote.backend.Communicator;
 import de.prismatikremote.hartz.prismatikremote.backend.RemoteState;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.Communication;
 
-public class Profiles extends AppCompatActivity implements AdapterView.OnItemClickListener, Communicator.OnCompleteListener {
+public class Profiles extends Drawer implements AdapterView.OnItemClickListener, Communicator.OnCompleteListener {
 
     private ListView profilesListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profiles);
+
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mDrawerLayout.addView(inflater.inflate(R.layout.activity_profiles, null));
 
         profilesListView = (ListView) findViewById(R.id.profilesListView);
         ArrayAdapter<String> itemsAdapter =
                 new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, RemoteState.getInstance().getProfiles());
         profilesListView.setAdapter(itemsAdapter);
+
+        int selection = RemoteState.getInstance().getProfiles().indexOf(RemoteState.getInstance().getProfile());
+        profilesListView.setSelection(selection);
     }
 
     @Override
@@ -44,6 +50,7 @@ public class Profiles extends AppCompatActivity implements AdapterView.OnItemCli
 
     @Override
     public void onSuccess() {
-
+        int selection = RemoteState.getInstance().getProfiles().indexOf(RemoteState.getInstance().getProfile());
+        profilesListView.setSelection(selection);
     }
 }

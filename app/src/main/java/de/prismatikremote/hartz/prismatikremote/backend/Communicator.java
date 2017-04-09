@@ -143,11 +143,11 @@ public class Communicator {
 
                     String output = in.readLine();
                     Log.d(TAG,"Output: <" + output );
-                    boolean error = com.onRespond(output, listener);
-                    if(!error) {
-                        Console.writeLine("<" + output);
-                    } else {
+                    boolean error = !com.onRespond(output, listener);
+                    if(error) {
                         Console.writeLine("!!!Error: " + output);
+                    } else {
+                        Console.writeLine("<" + output);
                     }
                     if(listener != null)
                         listener.onStepCompletet(com);
