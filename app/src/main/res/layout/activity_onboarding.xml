@@ -12,22 +12,31 @@
         android:layout_gravity="top"
         android:layout_weight="1"
         android:orientation="vertical">
+        <TextView
+            android:text="@string/serverIpEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/serverIpEditText"
             android:id="@+id/serverIpEditText" />
 
+        <TextView
+            android:text="@string/serverPortEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/serverPortEditText"
             android:id="@+id/serverPortEditText" />
 
+        <TextView
+            android:text="@string/apiKeyEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/apiKeyEditText"
             android:id="@+id/apiKeyEditText" />
     </LinearLayout>
     <LinearLayout

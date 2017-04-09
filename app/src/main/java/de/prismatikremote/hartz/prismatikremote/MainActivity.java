@@ -21,10 +21,9 @@ public class MainActivity extends AppCompatActivity implements Communicator.OnCo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //TODO: Replace with Data from OnBoarding Screen.
-        Communicator.getInstance().setConnection("192.168.2.118", 3636, this);
 
         Button powerButton = (Button) findViewById(R.id.toggle_power);
+        powerButton.setText(RemoteState.getInstance().getStatus() == RemoteState.Status.ON ? "On" : "Off");
         powerButton.setOnClickListener(this);
         load();
     }
