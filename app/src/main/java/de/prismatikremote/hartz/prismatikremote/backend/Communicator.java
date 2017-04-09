@@ -88,13 +88,14 @@ public class Communicator {
     public void setProfile(String profile, OnCompleteListener listener) {
         ArrayList<Communication> commands = new ArrayList<>();
         commands.add(new SetProfile(profile));
+        commands.add(new GetProfile());
 
         startThread(commands, listener);
     }
 
     private void startThread(ArrayList<Communication> commands, OnCompleteListener listener) {
         surroundLock(commands);
-        sourroundStartAndEnd(commands);
+        surroundStartAndEnd(commands);
         new Thread(new Executor(commands, listener)).start();
     }
 
@@ -103,8 +104,7 @@ public class Communicator {
         commands.add(new Unlock());
     }
 
-    private void sourroundStartAndEnd(ArrayList<Communication> commands) {
-        //TODO: create commands
+    private void surroundStartAndEnd(ArrayList<Communication> commands) {
         if (serverKey != null)
             commands.add(0, new ApiKey(serverKey));
         commands.add(new Exit());
