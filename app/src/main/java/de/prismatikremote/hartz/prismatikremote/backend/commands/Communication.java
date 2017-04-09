@@ -6,6 +6,11 @@ import de.prismatikremote.hartz.prismatikremote.backend.Communicator;
  * Created by kaiha on 08.04.2017.
  * Communication API based on:
  * https://github.com/Atarity/Lightpack-docs/blob/master/EN/Prismatik_API.md
+ *
+ * Steps for Communication:
+ * 1. prepareDataForCommand
+ * 2. getCommand
+ * 3. onRespond
  */
 public abstract class Communication {
     private static String TAG = "Communication";
@@ -16,6 +21,10 @@ public abstract class Communication {
     public static final String RESPOND_NOT_LOCKED = "not locked";
 
     protected String command;
+
+    public void prepareDataForCommand(String[] params) {
+
+    }
 
     public String getCommand() {
         return command;
