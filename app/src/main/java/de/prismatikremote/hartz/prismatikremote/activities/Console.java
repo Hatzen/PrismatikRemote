@@ -11,7 +11,7 @@ public class Console extends Drawer {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Test
+
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mDrawerLayout.addView(inflater.inflate(R.layout.activity_console, null, false));
     }
