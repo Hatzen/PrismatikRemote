@@ -69,7 +69,7 @@ public class MainActivity extends Drawer implements Communicator.OnCompleteListe
             Communicator.getInstance().togglePower(this);
         } else if ( view == findViewById(R.id.redLights)) {
             int[][] colors = new int[10][3];
-            
+
             for (int i = 0; i < colors.length; i++) {
                 colors[i][0] = 255;
                 colors[i][1] = 0;
