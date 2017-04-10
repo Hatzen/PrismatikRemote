@@ -1,4 +1,4 @@
-package de.prismatikremote.hartz.prismatikremote;
+package de.prismatikremote.hartz.prismatikremote.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import de.prismatikremote.hartz.prismatikremote.R;
 import de.prismatikremote.hartz.prismatikremote.backend.Communicator;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.Communication;
 import de.prismatikremote.hartz.prismatikremote.helper.UiHelper;
@@ -67,7 +68,7 @@ public class Onboarding extends AppCompatActivity  implements Communicator.OnCom
     }
 
     @Override
-    public void onStepCompletet(Communication communication) {
+    public void onStepCompleted(Communication communication) {
 
     }
 

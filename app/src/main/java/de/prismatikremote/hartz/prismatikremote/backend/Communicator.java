@@ -19,6 +19,7 @@ import de.prismatikremote.hartz.prismatikremote.backend.commands.GetProfile;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.GetProfiles;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.GetStatus;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.Lock;
+import de.prismatikremote.hartz.prismatikremote.backend.commands.SetColor;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.SetProfile;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.ToggleStatus;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.Unlock;
@@ -34,9 +35,9 @@ public class Communicator {
      * Interface to inform caller that all commands have finished.
      */
     public interface OnCompleteListener {
-        public void onError(String result);
-        public void onStepCompletet(Communication communication);
-        public void onSuccess();
+        void onError(String result);
+        void onStepCompleted(Communication communication);
+        void onSuccess();
     }
 
     private String serverKey;
@@ -91,6 +92,13 @@ public class Communicator {
         commands.add(new GetProfile());
 
         startThread(commands, listener);
+    }
+
+    public void setNotificationLight(int[][] colors) {
+        ArrayList<Communication> commands = new ArrayList<>();
+        commands.add(new SetColor(colors));
+
+        startThread(commands, null);
     }
 
     private void startThread(ArrayList<Communication> commands, OnCompleteListener listener) {
@@ -150,7 +158,7 @@ public class Communicator {
                         Console.writeLine("<" + output);
                     }
                     if(listener != null)
-                        listener.onStepCompletet(com);
+                        listener.onStepCompleted(com);
                 }
 
                 out.close();

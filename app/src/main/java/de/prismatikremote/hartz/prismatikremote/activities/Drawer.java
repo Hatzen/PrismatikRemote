@@ -1,4 +1,4 @@
-package de.prismatikremote.hartz.prismatikremote;
+package de.prismatikremote.hartz.prismatikremote.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import de.prismatikremote.hartz.prismatikremote.R;
 
 /**
  * Created by kaiha on 09.04.2017.

@@ -1,6 +1,5 @@
-package de.prismatikremote.hartz.prismatikremote;
+package de.prismatikremote.hartz.prismatikremote.activities;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import de.prismatikremote.hartz.prismatikremote.R;
 import de.prismatikremote.hartz.prismatikremote.backend.Communicator;
 import de.prismatikremote.hartz.prismatikremote.backend.RemoteState;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.Communication;
@@ -24,7 +24,7 @@ public class Profiles extends Drawer implements AdapterView.OnItemClickListener,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         mDrawerLayout.addView(inflater.inflate(R.layout.activity_profiles, null));
 
         profilesListView = (ListView) findViewById(R.id.profilesListView);
@@ -63,7 +63,7 @@ public class Profiles extends Drawer implements AdapterView.OnItemClickListener,
     }
 
     @Override
-    public void onStepCompletet(Communication communication) {
+    public void onStepCompleted(Communication communication) {
 
     }
 

@@ -1,8 +1,10 @@
-package de.prismatikremote.hartz.prismatikremote;
+package de.prismatikremote.hartz.prismatikremote.activities;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+
+import de.prismatikremote.hartz.prismatikremote.R;
 
 public class Console extends Drawer {
 

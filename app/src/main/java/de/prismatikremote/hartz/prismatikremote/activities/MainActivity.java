@@ -1,12 +1,12 @@
-package de.prismatikremote.hartz.prismatikremote;
+package de.prismatikremote.hartz.prismatikremote.activities;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 
+import de.prismatikremote.hartz.prismatikremote.R;
 import de.prismatikremote.hartz.prismatikremote.backend.Communicator;
 import de.prismatikremote.hartz.prismatikremote.backend.RemoteState;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.Communication;
@@ -22,12 +22,16 @@ public class MainActivity extends Drawer implements Communicator.OnCompleteListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         mDrawerLayout.addView(inflater.inflate(R.layout.activity_main, null));
 
         Button powerButton = (Button) findViewById(R.id.toggle_power);
         powerButton.setText(RemoteState.getInstance().getStatus() == RemoteState.Status.ON ? "On" : "Off");
         powerButton.setOnClickListener(this);
+
+        Button redLights = (Button) findViewById(R.id.redLights);
+        redLights.setOnClickListener(this);
+
         load();
     }
 
@@ -40,7 +44,7 @@ public class MainActivity extends Drawer implements Communicator.OnCompleteListe
     }
 
     @Override
-    public void onStepCompletet(Communication communication) {
+    public void onStepCompleted(Communication communication) {
         if( communication instanceof GetStatus) {
             runOnUiThread(new Runnable() {
                 @Override
@@ -59,9 +63,60 @@ public class MainActivity extends Drawer implements Communicator.OnCompleteListe
     }
 
     @Override
-    public void onClick(View v) {
-        load();
-        Communicator.getInstance().togglePower(this);
+    public void onClick(View view) {
+        if( view == findViewById(R.id.toggle_power)) {
+            load();
+            Communicator.getInstance().togglePower(this);
+        } else if ( view == findViewById(R.id.redLights)) {
+            int[][] colors = new int[10][3];
+            /*colors[0][0] = 255;
+            colors[0][1] = 255;
+            colors[0][2] = 255;
+
+            colors[1][1] = 255;
+            colors[1][2] = 0;
+            colors[1][3] = 0;
+
+            colors[2][1] = 0;
+            colors[2][2] = 255;
+            colors[2][3] = 0;
+
+            colors[3][1] = 0;
+            colors[3][2] = 0;
+            colors[3][3] = 255;
+
+            colors[4][1] = 255;
+            colors[4][2] = 0;
+            colors[4][3] = 0;
+
+            colors[5][1] = 0;
+            colors[5][2] = 255;
+            colors[5][3] = 0;
+
+            colors[6][1] = 0;
+            colors[6][2] = 0;
+            colors[6][3] = 255;
+
+            colors[7][1] = 0;
+            colors[7][2] = 0;
+            colors[7][3] = 255;
+
+            colors[8][1] = 255;
+            colors[8][2] = 0;
+            colors[8][3] = 255;
+
+            colors[9][1] = 255;
+            colors[9][2] = 0;
+            colors[9][3] = 0;*/
+
+            for (int i = 0; i < colors.length; i++) {
+                colors[i][0] = 255;
+                colors[i][1] = 0;
+                colors[i][2] = 0;
+            }
+
+            Communicator.getInstance().setNotificationLight(colors);
+        }
     }
 
     public void load() {
