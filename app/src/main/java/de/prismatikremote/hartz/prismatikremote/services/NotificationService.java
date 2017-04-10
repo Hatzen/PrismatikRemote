@@ -19,7 +19,6 @@ import de.prismatikremote.hartz.prismatikremote.backend.RemoteState;
 /**
  * Created by kaiha on 09.04.2017.
  */
-//Test
 public class NotificationService extends NotificationListenerService {
 
     Context context;
@@ -88,7 +87,6 @@ public class NotificationService extends NotificationListenerService {
                     colors[j+(i*stepSize)] = color;
                 }
             }
-
         } else {
             // Take the first matching ones.
             for (int i = 0; i < ledCount; i++) {
@@ -108,6 +106,10 @@ public class NotificationService extends NotificationListenerService {
      * @return
      */
     public static int[] getAverageColorRGB(Bitmap bitmap) {
+        if(bitmap == null) {
+            int[] color = {255,0,0};
+            return color;
+        }
         final int width = bitmap.getWidth();
         final int height = bitmap.getHeight();
         int size = width * height;

@@ -14,9 +14,7 @@ public class Notifications extends Drawer implements Communicator.OnCompleteList
         super.onCreate(savedInstanceState);
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        mDrawerLayout.addView(inflater.inflate(R.layout.activity_profiles, null));
-
-
+        mDrawerLayout.addView(inflater.inflate(R.layout.activity_notifications, null));
     }
 
     @Override

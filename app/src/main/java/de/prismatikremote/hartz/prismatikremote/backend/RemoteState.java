@@ -15,7 +15,13 @@ public class RemoteState {
         UNKNOWN
     }
 
+    public enum Mode {
+        AMBILIGHT,
+        MOODLAMP
+    }
+
     private Status status = Status.UNKNOWN;
+    private Mode mode = Mode.AMBILIGHT;
     private boolean statusApi;
     private ArrayList<String> profiles;
     private String profile;
@@ -67,5 +73,13 @@ public class RemoteState {
 
     public void setCountLeds(int countLeds) {
         this.countLeds = countLeds;
+    }
+
+    public Mode getMode() {
+        return mode;
+    }
+
+    public void setMode(Mode mode) {
+        this.mode = mode;
     }
 }

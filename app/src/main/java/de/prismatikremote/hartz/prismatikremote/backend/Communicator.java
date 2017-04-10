@@ -15,12 +15,14 @@ import de.prismatikremote.hartz.prismatikremote.backend.commands.ApiKey;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.Communication;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.Exit;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.GetCountLeds;
+import de.prismatikremote.hartz.prismatikremote.backend.commands.GetMode;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.GetProfile;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.GetProfiles;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.GetStatus;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.Lock;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.SetColor;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.SetProfile;
+import de.prismatikremote.hartz.prismatikremote.backend.commands.ToggleMode;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.ToggleStatus;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.Unlock;
 
@@ -72,6 +74,7 @@ public class Communicator {
         commands.add(new GetProfiles());
         commands.add(new GetProfile());
         commands.add(new GetCountLeds());
+        commands.add(new GetMode());
         //TODO: Add all get commands
 
         startThread(commands, listener);
@@ -82,6 +85,17 @@ public class Communicator {
         commands.add(new GetStatus());
         // TODO: Maybe check if the status changed and behave like it should!?
         commands.add(new ToggleStatus());
+        commands.add(new GetStatus());
+
+        startThread(commands, listener);
+    }
+
+    public void toggleMode(OnCompleteListener listener) {
+        ArrayList<Communication> commands = new ArrayList<>();
+        commands.add(new GetMode());
+        // TODO: Maybe check if the status changed and behave like it should!?
+        commands.add(new ToggleMode());
+        commands.add(new GetMode());
 
         startThread(commands, listener);
     }
@@ -89,6 +103,14 @@ public class Communicator {
     public void setProfile(String profile, OnCompleteListener listener) {
         ArrayList<Communication> commands = new ArrayList<>();
         commands.add(new SetProfile(profile));
+
+        // Hack for switching between Sound and Screen grabbing.
+        // TODO: Get working.
+        /*commands.add(new ToggleStatus());
+        commands.add(new GetStatus());
+        commands.add(new ToggleStatus());
+        commands.add(new GetStatus());*/
+
         commands.add(new GetProfile());
 
         startThread(commands, listener);
@@ -140,7 +162,7 @@ public class Communicator {
                 out = new PrintWriter(pingSocket.getOutputStream(), true);
                 in = new BufferedReader(new InputStreamReader(pingSocket.getInputStream()));
 
-                // Skip first Status Line. TODO:Move elsewhere (dont execute for every commandset)
+                // Skip first Status Line.
                 in.readLine();
 
                 for (Communication com : commands) {

@@ -52,8 +52,14 @@ public class Drawer extends AppCompatActivity {
                     case 1:
                         startActivity(new Intent(context, Profiles.class));
                         break;
+                    case 2:
+                        startActivity(new Intent(context, Notifications.class));
+                        break;
                     case 3:
                         startActivity(new Intent(context, Console.class));
+                        break;
+                    case 4:
+                        startActivity(new Intent(context, Settings.class));
                         break;
                 }
             }

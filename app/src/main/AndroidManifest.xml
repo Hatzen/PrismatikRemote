@@ -21,8 +21,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.Profiles" />
-        <activity android:name=".activities.Console"/>
-
+        <activity android:name=".activities.Notifications" />
+        <activity android:name=".activities.Console" />
+        <activity android:name=".activities.Settings" />
 
         <service
             android:name=".services.NotificationService"
@@ -32,7 +33,6 @@
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
-
 
     </application>
 

@@ -29,7 +29,11 @@ public class MainActivity extends Drawer implements Communicator.OnCompleteListe
         powerButton.setText(RemoteState.getInstance().getStatus() == RemoteState.Status.ON ? "On" : "Off");
         powerButton.setOnClickListener(this);
 
-        Button redLights = (Button) findViewById(R.id.redLights);
+        Button toggleMode = (Button) findViewById(R.id.toggle_mode);
+        toggleMode.setText(RemoteState.getInstance().getMode() == RemoteState.Mode.AMBILIGHT ? "Ambilight" : "Moodlamp");
+        toggleMode.setOnClickListener(this);
+
+        Button redLights = (Button) findViewById(R.id.red_lights);
         redLights.setOnClickListener(this);
 
         load();
@@ -50,7 +54,9 @@ public class MainActivity extends Drawer implements Communicator.OnCompleteListe
                 @Override
                 public void run() {
                     Button powerButton = (Button) findViewById(R.id.toggle_power);
-                    powerButton.setText(RemoteState.getInstance().getStatus() == RemoteState.Status.ON ? "Off" : "On");
+                    powerButton.setText(RemoteState.getInstance().getStatus() == RemoteState.Status.ON ? "On" : "Off");
+                    Button toggleMode = (Button) findViewById(R.id.toggle_mode);
+                    toggleMode.setText(RemoteState.getInstance().getMode() == RemoteState.Mode.AMBILIGHT ? "Ambilight" : "Moodlamp");
                 }
             });
         }
@@ -67,7 +73,10 @@ public class MainActivity extends Drawer implements Communicator.OnCompleteListe
         if( view == findViewById(R.id.toggle_power)) {
             load();
             Communicator.getInstance().togglePower(this);
-        } else if ( view == findViewById(R.id.redLights)) {
+        } else if ( view == findViewById(R.id.toggle_mode)) {
+            load();
+            Communicator.getInstance().toggleMode(this);
+        } else if ( view == findViewById(R.id.red_lights)) {
             int[][] colors = new int[10][3];
 
             for (int i = 0; i < colors.length; i++) {
@@ -78,6 +87,7 @@ public class MainActivity extends Drawer implements Communicator.OnCompleteListe
 
             Communicator.getInstance().setNotificationLight(colors);
         }
+
     }
 
     public void load() {

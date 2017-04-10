@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import de.prismatikremote.hartz.prismatikremote.R;
@@ -32,17 +31,22 @@ public class Profiles extends Drawer implements AdapterView.OnItemClickListener,
                 new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, RemoteState.getInstance().getProfiles()) {
                     public View getView(int position, View convertView, ViewGroup parent) {
                         super.getView(position, convertView, parent);
-                        if(convertView!=null){
-                            //ImageView img = (ImageView)convertView.findViewById(R.id.imageView1);
-                            if(profilesListView.isItemChecked(position)){
-                                convertView.setBackgroundColor(Color.GRAY);// here you can set any color.
-                                //img.setImageResource(R.drawable.img1);//img1 is stored in your rawable folder.
-                            }else{
-                                convertView.setBackgroundColor(0);
-                                //img.setImageResource(R.drawable.img2);
-                            }
+                        if (convertView == null) {
+                            convertView = super.getView(position, convertView, parent);
                         }
-                        return super.getView(position, convertView, parent);
+
+                        //ImageView img = (ImageView)convertView.findViewById(R.id.imageView1);;
+
+                        if ( RemoteState.getInstance().getProfiles().indexOf(RemoteState.getInstance().getProfile()) == position) {
+                        //if(profilesListView.isItemChecked(position)){
+                            convertView.setBackgroundColor(Color.LTGRAY);// here you can set any color.
+                            //img.setImageResource(R.drawable.img1);//img1 is stored in your rawable folder.
+                        }else{
+                            convertView.setBackgroundColor(0);
+                            //img.setImageResource(R.drawable.img2);
+                        }
+
+                        return convertView;
                     }
                 };
         profilesListView.setAdapter(itemsAdapter);
@@ -53,6 +57,7 @@ public class Profiles extends Drawer implements AdapterView.OnItemClickListener,
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Log.d("Taagsagsgasg", "Clicked" + position);
         final String item = (String) parent.getItemAtPosition(position);
         Communicator.getInstance().setProfile(item, this);
     }
@@ -78,11 +83,17 @@ public class Profiles extends Drawer implements AdapterView.OnItemClickListener,
     }
 
     private void setSelection() {
-        // TODO: Get selected working.
-        ((BaseAdapter) profilesListView.getAdapter()).notifyDataSetChanged();
+        /*// TODO: Get selected working.
         //profilesListView.requestFocusFromTouch();
+
+
         int selection = RemoteState.getInstance().getProfiles().indexOf(RemoteState.getInstance().getProfile());
         Log.d("Test124124", "selection" + selection);
-        profilesListView.setSelection(selection);
+        //profilesListView.setSelection(selection);
+
+        ((BaseAdapter) profilesListView.getAdapter()).notifyDataSetChanged();*/
+
+
+        profilesListView.invalidateViews();
     }
 }
