@@ -14,5 +14,5 @@ This app will be released in the Google Play Store.
 
 - [x] Turn on/off lights
 - [x] Choose profile
-- Turn lights on for Android notifications
-- Setup widgets (Multiple Desktop support)
+- [ ] Turn lights on for Android notifications
+- [ ] Setup widgets (Multiple Desktop support)
