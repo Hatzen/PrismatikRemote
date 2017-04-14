@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +32,6 @@ import com.jrummyapps.android.colorpicker.ColorPickerDialogListener;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,11 +40,13 @@ import de.prismatikremote.hartz.prismatikremote.R;
 import de.prismatikremote.hartz.prismatikremote.backend.Communicator;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.Communication;
 import de.prismatikremote.hartz.prismatikremote.helper.UiHelper;
+import de.prismatikremote.hartz.prismatikremote.model.ColorObject;
 
 // TODO: Tidy up.
 public class Notifications extends Drawer implements Communicator.OnCompleteListener, View.OnClickListener, ColorPickerDialogListener {
     public static final String NOTIFICATION_DATA_FILENAME = "NOTIFICATION_DATA_PRISMATIK";
 
+    // TODO: Rename colors to something more describing.
     private HashMap<String,ColorObject> colors;
     private PackageManager packageManager = null;
     private List<ApplicationInfo> appList = null;
@@ -77,11 +77,10 @@ public class Notifications extends Drawer implements Communicator.OnCompleteList
         });
 
         packageManager = getPackageManager();
-        colors = loadSerializedColors();
+        colors = loadSerializedColors(this);
 
         new LoadApplications().execute();
     }
-
 
     @Override
     public void onClick(View view) {
@@ -167,28 +166,25 @@ public class Notifications extends Drawer implements Communicator.OnCompleteList
 
     }
 
-    public void saveColors(){
+    public void saveColors() {
         try {
-            ObjectOutputStream oos = new ObjectOutputStream(openFileOutput(NOTIFICATION_DATA_FILENAME, Context.MODE_PRIVATE)); //Select where you wish to save the file...
+            ObjectOutputStream oos = new ObjectOutputStream(openFileOutput(NOTIFICATION_DATA_FILENAME, Context.MODE_PRIVATE));
 
             ArrayList<ColorObject> valueList = new ArrayList(colors.values());
-            oos.writeObject(valueList); // write the class as an 'object'
+            oos.writeObject(valueList);
 
-            oos.flush(); // flush the stream to insure all of the information was written to 'save_object.bin'
-            oos.close();// close the stream
+            oos.flush();
+            oos.close();
         }
         catch(Exception ex) {
-            //Log.v("Serialization Save Error : ",ex.getMessage());
             ex.printStackTrace();
         }
     }
 
-    public HashMap loadSerializedColors()
-    {
-        Log.e("test","12412412412412");
+    public static HashMap<String, ColorObject> loadSerializedColors(Context context) {
         HashMap<String,ColorObject> colors = new HashMap<>();
         try {
-            ObjectInputStream ois = new ObjectInputStream(openFileInput(NOTIFICATION_DATA_FILENAME));
+            ObjectInputStream ois = new ObjectInputStream(context.openFileInput(NOTIFICATION_DATA_FILENAME));
             Object o = ois.readObject();
             ArrayList<ColorObject> valueList = (ArrayList<ColorObject>) o;
             for(ColorObject colorObject: valueList) {
@@ -196,7 +192,6 @@ public class Notifications extends Drawer implements Communicator.OnCompleteList
             }
         }
         catch(Exception ex) {
-            //Log.v("Serialization Read Error : ",ex.getMessage());
             ex.printStackTrace();
         }
         return colors;
@@ -310,16 +305,4 @@ public class Notifications extends Drawer implements Communicator.OnCompleteList
         }
     }
 
-
-}
-
-/**
- * Model Class for Serialization.
- */
-class ColorObject implements Serializable {
-    static final long serialVersionUID =-5906931784715545258L;
-
-    public String packageName;
-    public int color;
-    public boolean regard;
 }

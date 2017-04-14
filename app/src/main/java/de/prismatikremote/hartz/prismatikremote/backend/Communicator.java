@@ -86,7 +86,6 @@ public class Communicator {
     public void togglePower(OnCompleteListener listener) {
         ArrayList<Communication> commands = new ArrayList<>();
         commands.add(new GetStatus());
-        // TODO: Maybe check if the status changed and behave like it should!?
         commands.add(new ToggleStatus());
         commands.add(new GetStatus());
 
@@ -96,7 +95,6 @@ public class Communicator {
     public void toggleMode(OnCompleteListener listener) {
         ArrayList<Communication> commands = new ArrayList<>();
         commands.add(new GetMode());
-        // TODO: Maybe check if the status changed and behave like it should!?
         commands.add(new ToggleMode());
         commands.add(new GetMode());
 
@@ -119,12 +117,20 @@ public class Communicator {
     }
 
     public void unsetNotificationLight() {
+        setProfile(RemoteState.getInstance().getProfile(), null);
+        /*
+        TODO: Check if this behavior of keeping lock is needed anywhere.
+        //in: setNotificationLight
+        startThread(commands, null, true);
+
+        //then here:
         if (blocker == null)
             return;
         synchronized (blocker) {
             blocker.notify();
         }
         blocker = null;
+        */
     }
 
     private void startThread(ArrayList<Communication> commands, OnCompleteListener listener, boolean keepLock) {

@@ -58,10 +58,18 @@ public class UiHelper {
     }
 
     public static int toColorInt(int[] color) {
-        int argb = 255;
+        int argb = 255; // No Alpha.
         argb = (argb << 8) + color[0];
         argb = (argb << 8) + color[1];
         argb = (argb << 8) + color[2];
         return argb;
+    }
+
+    public static int[] toColorInts(int color) {
+        int rgb[] = new int[3];
+        rgb[0] = (color >> 16) & 0x000000FF;
+        rgb[1] = (color >> 8) & 0x000000FF;
+        rgb[2] = color & 0x000000FF;
+        return rgb;
     }
 }

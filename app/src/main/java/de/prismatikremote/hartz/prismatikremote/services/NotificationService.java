@@ -11,9 +11,11 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.prismatikremote.hartz.prismatikremote.activities.Notifications;
 import de.prismatikremote.hartz.prismatikremote.backend.Communicator;
 import de.prismatikremote.hartz.prismatikremote.backend.RemoteState;
 import de.prismatikremote.hartz.prismatikremote.helper.UiHelper;
+import de.prismatikremote.hartz.prismatikremote.model.ColorObject;
 
 /**
  * Created by kaiha on 09.04.2017.
@@ -40,20 +42,23 @@ public class NotificationService extends NotificationListenerService {
     public void onNotificationRemoved(StatusBarNotification sbn) {
         Log.i("Msg","Notification Removed");
         refreshLights();
-
     }
 
     private void refreshLights() {
+        if(getActiveNotifications().length == 0) {
+            Communicator.getInstance().unsetNotificationLight();
+        }
+
+        HashMap<String, ColorObject> colorObjects = Notifications.loadSerializedColors(getBaseContext());
+
         HashMap<StatusBarNotification,Integer> occurence = new HashMap();
 
         for (StatusBarNotification sbn : getActiveNotifications()) {
-
-            Integer count = occurence.get(sbn);
-            occurence.put(sbn, count != null ? count+1 : 0);
-
-
-            Log.d("NotificationServce", "" + sbn.getPackageName());
-
+            ColorObject colorObject = colorObjects.get(sbn.getPackageName());
+            if (colorObject != null && colorObject.regard) {
+                Integer count = occurence.get(sbn);
+                occurence.put(sbn, count != null ? count+1 : 0);
+            }
         }
 
         // Sort Map to occurence
@@ -80,8 +85,9 @@ public class NotificationService extends NotificationListenerService {
 
             // TODO: Reduce to match. (Already done?)
             for(int i = 0; i < lengthOfKeys; i++) {
-                int[] color = UiHelper.getAverageColorRGB(
-                        ((Map.Entry<StatusBarNotification, Integer>)a[i]).getKey().getNotification().largeIcon);
+                int[] color = getColorForStatusBarNotification(
+                        ((Map.Entry<StatusBarNotification, Integer>)a[i]).getKey()
+                        , colorObjects);
                 for(int j = 0; j < stepSize;j++) {
                     if(j+(i*stepSize) >= colors.length) {
                         break;
@@ -92,14 +98,27 @@ public class NotificationService extends NotificationListenerService {
         } else {
             // Take the first matching ones.
             for (int i = 0; i < ledCount; i++) {
-                colors[i] = UiHelper.getAverageColorRGB(
-                        ((Map.Entry<StatusBarNotification, Integer>) a[i]).getKey().getNotification().largeIcon);
+                colors[i] = getColorForStatusBarNotification(
+                        ((Map.Entry<StatusBarNotification, Integer>) a[i]).getKey()
+                        , colorObjects);
             }
         }
 
         Communicator.getInstance().setNotificationLight(colors);
     }
 
+
+    private int[] getColorForStatusBarNotification(StatusBarNotification sbn, HashMap<String, ColorObject> colors) {
+        int[] color = new int[3];
+        color[0] = 255;
+        color[1] = 255;
+        color[2] = 255;
+
+        if(colors.get(sbn.getPackageName()) != null) {
+            color = UiHelper.toColorInts(colors.get(sbn.getPackageName()).color);
+        }
+        return color;
+    }
 
 }
 
