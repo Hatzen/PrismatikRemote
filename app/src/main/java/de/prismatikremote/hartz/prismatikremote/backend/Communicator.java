@@ -42,6 +42,10 @@ public class Communicator {
         void onSuccess();
     }
 
+    public static Communicator getInstance() {
+        return instance;
+    }
+
     private String serverKey;
     private String serverIp;
     private int serverPort;
@@ -49,9 +53,8 @@ public class Communicator {
     // Singleton.
     private static final Communicator instance = new Communicator();
 
-    public static Communicator getInstance() {
-        return instance;
-    }
+    // Keeps lock state (so lights keep color).
+    private Executor blocker;
 
     /**
      * Setup the Connection information.
@@ -77,7 +80,7 @@ public class Communicator {
         commands.add(new GetMode());
         //TODO: Add all get commands
 
-        startThread(commands, listener);
+        startThread(commands, listener, false);
     }
 
     public void togglePower(OnCompleteListener listener) {
@@ -87,7 +90,7 @@ public class Communicator {
         commands.add(new ToggleStatus());
         commands.add(new GetStatus());
 
-        startThread(commands, listener);
+        startThread(commands, listener, false);
     }
 
     public void toggleMode(OnCompleteListener listener) {
@@ -97,36 +100,42 @@ public class Communicator {
         commands.add(new ToggleMode());
         commands.add(new GetMode());
 
-        startThread(commands, listener);
+        startThread(commands, listener, false);
     }
 
     public void setProfile(String profile, OnCompleteListener listener) {
         ArrayList<Communication> commands = new ArrayList<>();
         commands.add(new SetProfile(profile));
-
-        // Hack for switching between Sound and Screen grabbing.
-        // TODO: Get working.
-        /*commands.add(new ToggleStatus());
-        commands.add(new GetStatus());
-        commands.add(new ToggleStatus());
-        commands.add(new GetStatus());*/
-
         commands.add(new GetProfile());
 
-        startThread(commands, listener);
+        startThread(commands, listener, false);
     }
 
     public void setNotificationLight(int[][] colors) {
         ArrayList<Communication> commands = new ArrayList<>();
         commands.add(new SetColor(colors));
 
-        startThread(commands, null);
+        startThread(commands, null, false);
     }
 
-    private void startThread(ArrayList<Communication> commands, OnCompleteListener listener) {
+    public void unsetNotificationLight() {
+        if (blocker == null)
+            return;
+        synchronized (blocker) {
+            blocker.notify();
+        }
+        blocker = null;
+    }
+
+    private void startThread(ArrayList<Communication> commands, OnCompleteListener listener, boolean keepLock) {
         surroundLock(commands);
         surroundStartAndEnd(commands);
-        new Thread(new Executor(commands, listener)).start();
+
+        blocker = new Executor(commands, listener);
+        if (keepLock) {
+            blocker.setKeepLock();
+        }
+        new Thread(blocker).start();
     }
 
     private void surroundLock(ArrayList<Communication> commands) {
@@ -146,10 +155,15 @@ public class Communicator {
     private class Executor implements Runnable {
         private ArrayList<Communication> commands;
         private OnCompleteListener listener;
+        private boolean keepLock = false;
 
         Executor(ArrayList<Communication> commands, OnCompleteListener listener ) {
             this.commands = commands;
             this.listener = listener;
+        }
+
+        public void setKeepLock() {
+            keepLock = true;
         }
 
         @Override
@@ -165,22 +179,34 @@ public class Communicator {
                 // Skip first Status Line.
                 in.readLine();
 
-                for (Communication com : commands) {
-                    String input = com.getCommand();
+                for (Communication communication : commands) {
+
+                    if((communication instanceof Unlock) && keepLock) {
+                        try {
+                            synchronized (this) {
+                                wait();
+                            }
+                            //
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    String input = communication.getCommand();
                     Log.e(TAG,"Input: >" + input );
                     Console.writeLine(">" + input);
                     out.println(input);
 
                     String output = in.readLine();
                     Log.d(TAG,"Output: <" + output );
-                    boolean error = !com.onRespond(output, listener);
+                    boolean error = !communication.onRespond(output, listener);
                     if(error) {
                         Console.writeLine("!!!Error: " + output);
                     } else {
                         Console.writeLine("<" + output);
                     }
                     if(listener != null)
-                        listener.onStepCompleted(com);
+                        listener.onStepCompleted(communication);
                 }
 
                 out.close();

@@ -69,7 +69,7 @@ public class Profiles extends Drawer implements AdapterView.OnItemClickListener,
 
     @Override
     public void onStepCompleted(Communication communication) {
-
+        // TODO: Refresh listview, maybe profile is added.
     }
 
     @Override
@@ -83,17 +83,6 @@ public class Profiles extends Drawer implements AdapterView.OnItemClickListener,
     }
 
     private void setSelection() {
-        /*// TODO: Get selected working.
-        //profilesListView.requestFocusFromTouch();
-
-
-        int selection = RemoteState.getInstance().getProfiles().indexOf(RemoteState.getInstance().getProfile());
-        Log.d("Test124124", "selection" + selection);
-        //profilesListView.setSelection(selection);
-
-        ((BaseAdapter) profilesListView.getAdapter()).notifyDataSetChanged();*/
-
-
         profilesListView.invalidateViews();
     }
 }

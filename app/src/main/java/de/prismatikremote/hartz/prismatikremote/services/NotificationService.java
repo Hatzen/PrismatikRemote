@@ -27,6 +27,9 @@ public class NotificationService extends NotificationListenerService {
     public void onCreate() {
         super.onCreate();
         context = getApplicationContext();
+
+        // TODO: NotificationManager.isNotificationPolicyAccessGranted(), to check if notifications access is granted
+
     }
 
     @Override

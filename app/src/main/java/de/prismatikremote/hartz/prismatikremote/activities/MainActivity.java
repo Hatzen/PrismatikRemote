@@ -36,6 +36,9 @@ public class MainActivity extends Drawer implements Communicator.OnCompleteListe
         Button redLights = (Button) findViewById(R.id.red_lights);
         redLights.setOnClickListener(this);
 
+        Button unsetLights = (Button) findViewById(R.id.unset_lights);
+        unsetLights.setOnClickListener(this);
+
         load();
     }
 
@@ -86,6 +89,8 @@ public class MainActivity extends Drawer implements Communicator.OnCompleteListe
             }
 
             Communicator.getInstance().setNotificationLight(colors);
+        } else if ( view == findViewById(R.id.unset_lights)) {
+            Communicator.getInstance().unsetNotificationLight();
         }
 
     }
