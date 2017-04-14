@@ -2,8 +2,6 @@ package de.prismatikremote.hartz.prismatikremote.services;
 
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
@@ -15,6 +13,7 @@ import java.util.Map;
 
 import de.prismatikremote.hartz.prismatikremote.backend.Communicator;
 import de.prismatikremote.hartz.prismatikremote.backend.RemoteState;
+import de.prismatikremote.hartz.prismatikremote.helper.UiHelper;
 
 /**
  * Created by kaiha on 09.04.2017.
@@ -81,7 +80,7 @@ public class NotificationService extends NotificationListenerService {
 
             // TODO: Reduce to match. (Already done?)
             for(int i = 0; i < lengthOfKeys; i++) {
-                int[] color = getAverageColorRGB(
+                int[] color = UiHelper.getAverageColorRGB(
                         ((Map.Entry<StatusBarNotification, Integer>)a[i]).getKey().getNotification().largeIcon);
                 for(int j = 0; j < stepSize;j++) {
                     if(j+(i*stepSize) >= colors.length) {
@@ -93,7 +92,7 @@ public class NotificationService extends NotificationListenerService {
         } else {
             // Take the first matching ones.
             for (int i = 0; i < ledCount; i++) {
-                colors[i] = getAverageColorRGB(
+                colors[i] = UiHelper.getAverageColorRGB(
                         ((Map.Entry<StatusBarNotification, Integer>) a[i]).getKey().getNotification().largeIcon);
             }
         }
@@ -101,42 +100,6 @@ public class NotificationService extends NotificationListenerService {
         Communicator.getInstance().setNotificationLight(colors);
     }
 
-    /**
-     * Calculate the average red, green, blue color values of a bitmap
-     *
-     * @param bitmap
-     *            a {@link Bitmap}
-     * @return
-     */
-    public static int[] getAverageColorRGB(Bitmap bitmap) {
-        if(bitmap == null) {
-            int[] color = {255,0,0};
-            return color;
-        }
-        final int width = bitmap.getWidth();
-        final int height = bitmap.getHeight();
-        int size = width * height;
-        int pixelColor;
-        int r, g, b;
-        r = g = b = 0;
-        for (int x = 0; x < width; ++x) {
-            for (int y = 0; y < height; ++y) {
-                pixelColor = bitmap.getPixel(x, y);
-                if (pixelColor == 0) {
-                    size--;
-                    continue;
-                }
-                r += Color.red(pixelColor);
-                g += Color.green(pixelColor);
-                b += Color.blue(pixelColor);
-            }
-        }
-        r /= size;
-        g /= size;
-        b /= size;
-        return new int[] {
-                r, g, b
-        };
-    }
+
 }
 

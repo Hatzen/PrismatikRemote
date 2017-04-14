@@ -26,5 +26,8 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.2.0'
     testCompile 'junit:junit:4.12'
+
+    // Custom console.
     compile 'com.jraska:console:0.4.3'
+    compile 'com.jrummyapps:colorpicker:2.1.6'
 }

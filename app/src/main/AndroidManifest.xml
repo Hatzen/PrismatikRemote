@@ -24,6 +24,7 @@
         <activity android:name=".activities.Notifications" />
         <activity android:name=".activities.Console" />
         <activity android:name=".activities.Settings" />
+        <activity android:name=".activities.Widgets" />
 
         <service
             android:name=".services.NotificationService"
@@ -34,6 +35,7 @@
             </intent-filter>
         </service>
 
+        <activity android:name=".helper.ColorPickerActivity"></activity>
     </application>
 
 </manifest>

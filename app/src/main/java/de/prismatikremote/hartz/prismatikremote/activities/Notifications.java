@@ -1,5 +1,6 @@
 package de.prismatikremote.hartz.prismatikremote.activities;
 
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
@@ -7,31 +8,49 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.jrummyapps.android.colorpicker.ColorPanelView;
+import com.jrummyapps.android.colorpicker.ColorPickerDialog;
+import com.jrummyapps.android.colorpicker.ColorPickerDialogListener;
+
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import de.prismatikremote.hartz.prismatikremote.R;
 import de.prismatikremote.hartz.prismatikremote.backend.Communicator;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.Communication;
+import de.prismatikremote.hartz.prismatikremote.helper.UiHelper;
 
-public class Notifications extends Drawer implements Communicator.OnCompleteListener, View.OnClickListener {
+// TODO: Tidy up.
+public class Notifications extends Drawer implements Communicator.OnCompleteListener, View.OnClickListener, ColorPickerDialogListener {
+    public static final String NOTIFICATION_DATA_FILENAME = "NOTIFICATION_DATA_PRISMATIK";
 
+    private HashMap<String,ColorObject> colors;
     private PackageManager packageManager = null;
-    private List<ApplicationInfo> applist = null;
-    private ApplicationAdapter listadapter = null;
+    private List<ApplicationInfo> appList = null;
+    private ApplicationAdapter listAdapter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +62,22 @@ public class Notifications extends Drawer implements Communicator.OnCompleteList
         Button notificationDummy = (Button) findViewById(R.id.notification_dummy);
         notificationDummy.setOnClickListener(this);
 
+        final Activity activity = this;
+        final ListView appListView = (ListView) findViewById(R.id.app_list);
+        appListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int color = colors.get(appList.get(position).packageName).color;
+                ColorPickerDialog.newBuilder()
+                        .setDialogType(ColorPickerDialog.TYPE_CUSTOM)
+                        .setAllowPresets(false)
+                        .setColor(color)
+                        .setDialogId(position)
+                        .show(activity);
+            }
+        });
+
         packageManager = getPackageManager();
+        colors = loadSerializedColors();
 
         new LoadApplications().execute();
     }
@@ -79,6 +113,8 @@ public class Notifications extends Drawer implements Communicator.OnCompleteList
                     (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             // mId allows you to update the notification later on.
             mNotificationManager.notify(1241, mBuilder.build());
+        } else if (view == findViewById(R.id.notification_dummy)) {
+
         }
     }
 
@@ -102,15 +138,73 @@ public class Notifications extends Drawer implements Communicator.OnCompleteList
             try {
                 if (null != packageManager.getLaunchIntentForPackage(info.packageName)) {
                     applist.add(info);
+                    if(colors.get(info.packageName) == null) {
+                        ColorObject color = new ColorObject();
+                        color.packageName = info.packageName;
+                        Bitmap icon = ((BitmapDrawable)info.loadIcon(packageManager)).getBitmap();
+                        int[] avgColor = UiHelper.getAverageColorRGB(icon);
+                        color.color = UiHelper.toColorInt(avgColor);
+                        colors.put(info.packageName, color);
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
         return applist;
     }
 
+    @Override
+    public void onColorSelected(int dialogId, @ColorInt int color) {
+        // Dialogid = position.
+        colors.get(appList.get(dialogId).packageName).color = color;
+        listAdapter.notifyDataSetChanged();
+        saveColors();
+    }
+
+    @Override
+    public void onDialogDismissed(int dialogId) {
+
+    }
+
+    public void saveColors(){
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(openFileOutput(NOTIFICATION_DATA_FILENAME, Context.MODE_PRIVATE)); //Select where you wish to save the file...
+
+            ArrayList<ColorObject> valueList = new ArrayList(colors.values());
+            oos.writeObject(valueList); // write the class as an 'object'
+
+            oos.flush(); // flush the stream to insure all of the information was written to 'save_object.bin'
+            oos.close();// close the stream
+        }
+        catch(Exception ex) {
+            //Log.v("Serialization Save Error : ",ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+
+    public HashMap loadSerializedColors()
+    {
+        Log.e("test","12412412412412");
+        HashMap<String,ColorObject> colors = new HashMap<>();
+        try {
+            ObjectInputStream ois = new ObjectInputStream(openFileInput(NOTIFICATION_DATA_FILENAME));
+            Object o = ois.readObject();
+            ArrayList<ColorObject> valueList = (ArrayList<ColorObject>) o;
+            for(ColorObject colorObject: valueList) {
+                colors.put(colorObject.packageName, colorObject);
+            }
+        }
+        catch(Exception ex) {
+            //Log.v("Serialization Read Error : ",ex.getMessage());
+            ex.printStackTrace();
+        }
+        return colors;
+    }
+
+    /**
+     * Adapter class for the list view.
+     */
     private class ApplicationAdapter extends ArrayAdapter<ApplicationInfo> {
         private List<ApplicationInfo> appsList = null;
         private Context context;
@@ -140,7 +234,7 @@ public class Notifications extends Drawer implements Communicator.OnCompleteList
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             View view = convertView;
             if (null == view) {
                 LayoutInflater layoutInflater = (LayoutInflater) context
@@ -153,23 +247,38 @@ public class Notifications extends Drawer implements Communicator.OnCompleteList
                 TextView appName = (TextView) view.findViewById(R.id.app_name);
                 TextView packageName = (TextView) view.findViewById(R.id.app_paackage);
                 ImageView iconview = (ImageView) view.findViewById(R.id.app_icon);
+                ColorPanelView lightColor = (ColorPanelView) view.findViewById(R.id.light_color);
+                CheckBox regardCheckbox = (CheckBox) view.findViewById(R.id.regard_checkbox);
+                regardCheckbox.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        colors.get(appList.get(position).packageName).regard = ((CheckBox) view).isChecked();
+                        saveColors();
+                    }
+                });
 
                 appName.setText(applicationInfo.loadLabel(packageManager));
                 packageName.setText(applicationInfo.packageName);
                 iconview.setImageDrawable(applicationInfo.loadIcon(packageManager));
+
+                regardCheckbox.setChecked(colors.get(applicationInfo.packageName).regard);
+                lightColor.setColor(colors.get(applicationInfo.packageName).color);
             }
             return view;
         }
     }
 
+    /**
+     * Class that loads all applications data.
+     */
     private class LoadApplications extends AsyncTask<Void, Void, Void> {
         private ProgressDialog progress = null;
 
         @Override
         protected Void doInBackground(Void... params) {
-            applist = checkForLaunchIntent(packageManager.getInstalledApplications(PackageManager.GET_META_DATA));
-            listadapter = new ApplicationAdapter(Notifications.this,
-                    R.layout.snippet_list_row, applist);
+            appList = checkForLaunchIntent(packageManager.getInstalledApplications(PackageManager.GET_META_DATA));
+            listAdapter = new ApplicationAdapter(Notifications.this,
+                    R.layout.snippet_list_row, appList);
 
             return null;
         }
@@ -185,7 +294,7 @@ public class Notifications extends Drawer implements Communicator.OnCompleteList
             super.onPostExecute(result);
 
             ListView list = (ListView) findViewById(R.id.app_list);
-            list.setAdapter(listadapter);
+            list.setAdapter(listAdapter);
         }
 
         @Override
@@ -201,4 +310,16 @@ public class Notifications extends Drawer implements Communicator.OnCompleteList
         }
     }
 
+
+}
+
+/**
+ * Model Class for Serialization.
+ */
+class ColorObject implements Serializable {
+    static final long serialVersionUID =-5906931784715545258L;
+
+    public String packageName;
+    public int color;
+    public boolean regard;
 }

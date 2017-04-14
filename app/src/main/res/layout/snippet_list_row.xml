@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
-    android:orientation="horizontal"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="horizontal">
 
     <CheckBox
-        android:id="@+id/chkWindows"
+        android:id="@+id/regard_checkbox"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
     <ImageView
         android:id="@+id/app_icon"
         android:layout_width="50dp"
@@ -16,11 +20,12 @@
         android:scaleType="centerCrop" />
 
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="fill_parent"
+        android:layout_weight="2"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:paddingLeft="5dp" >
+        android:paddingLeft="5dp">
 
         <TextView
             android:id="@+id/app_name"
@@ -35,4 +40,11 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical" />
     </LinearLayout>
+
+    <com.jrummyapps.android.colorpicker.ColorPanelView
+        android:id="@+id/light_color"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        app:cpv_borderColor="@color/colorAccent" />
 </LinearLayout>

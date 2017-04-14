@@ -38,8 +38,8 @@ public class Drawer extends AppCompatActivity {
 
     private void setupDrawer() {
         mDrawerList = (ListView)findViewById(R.id.navList);
-        String[] osArray = { "Start", "Profiles","Notifications", "Console", "Settings"};
-        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
+        String[] osArray = { "Start", "Profiles","Notifications", "Widgets", "Console", "Settings"};
+        mAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, osArray);
         mDrawerList.setAdapter(mAdapter);
         final Context context = this;
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -56,9 +56,12 @@ public class Drawer extends AppCompatActivity {
                         startActivity(new Intent(context, Notifications.class));
                         break;
                     case 3:
-                        startActivity(new Intent(context, Console.class));
+                        startActivity(new Intent(context, Widgets.class));
                         break;
                     case 4:
+                        startActivity(new Intent(context, Console.class));
+                        break;
+                    case 5:
                         startActivity(new Intent(context, Settings.class));
                         break;
                 }
