@@ -112,8 +112,6 @@ public class Notifications extends Drawer implements Communicator.OnCompleteList
                     (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             // mId allows you to update the notification later on.
             mNotificationManager.notify(1241, mBuilder.build());
-        } else if (view == findViewById(R.id.notification_dummy)) {
-
         }
     }
 

@@ -16,4 +16,8 @@ public class SetProfile extends Communication {
         return "setprofile:" + profile;
     }
 
+    @Override
+    public boolean isDelayNeeded() {
+        return true;
+    }
 }

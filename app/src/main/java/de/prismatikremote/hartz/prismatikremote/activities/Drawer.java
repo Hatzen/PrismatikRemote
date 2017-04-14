@@ -1,9 +1,11 @@
 package de.prismatikremote.hartz.prismatikremote.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +22,7 @@ import de.prismatikremote.hartz.prismatikremote.R;
  */
 
 public class Drawer extends AppCompatActivity {
+    protected ProgressDialog dialog;
 
     private ListView mDrawerList;
     private ArrayAdapter<String> mAdapter;
@@ -34,6 +37,16 @@ public class Drawer extends AppCompatActivity {
         setContentView(R.layout.drawer);
 
         setupDrawer();
+    }
+
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        }
     }
 
     private void setupDrawer() {
@@ -96,6 +109,15 @@ public class Drawer extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
@@ -112,5 +134,9 @@ public class Drawer extends AppCompatActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    protected void load() {
+        dialog = ProgressDialog.show(this, "", "Loading. Please wait..", true);
     }
 }

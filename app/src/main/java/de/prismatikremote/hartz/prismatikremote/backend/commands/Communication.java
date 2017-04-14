@@ -22,16 +22,15 @@ public abstract class Communication {
 
     protected String command;
 
-    public void prepareDataForCommand(String[] params) {
-
-    }
-
     public String getCommand() {
         return command;
     }
 
     public boolean onRespond(String response, Communicator.OnCompleteListener listener ) {
-        //Log.d(TAG, response);
         return response.equals(Communication.RESPOND_OK);
+    }
+
+    public boolean isDelayNeeded() {
+        return false;
     }
 }

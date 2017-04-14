@@ -9,6 +9,7 @@ import de.prismatikremote.hartz.prismatikremote.backend.RemoteState;
 public class ToggleMode extends Communication {
     public static final String AMBILIGHT = "ambilight";
     public static final String MOODLAMP = "moodlamp";
+    protected boolean needsDelay = true;
 
     @Override
     public String getCommand() {

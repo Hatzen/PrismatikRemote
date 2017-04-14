@@ -18,4 +18,8 @@ public class ToggleStatus extends Communication {
         return command;
     }
 
+    @Override
+    public boolean isDelayNeeded() {
+        return true;
+    }
 }

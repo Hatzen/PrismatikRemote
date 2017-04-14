@@ -1,5 +1,6 @@
 package de.prismatikremote.hartz.prismatikremote.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import de.prismatikremote.hartz.prismatikremote.backend.commands.Communication;
 import de.prismatikremote.hartz.prismatikremote.helper.UiHelper;
 
 public class Onboarding extends AppCompatActivity  implements Communicator.OnCompleteListener, View.OnClickListener  {
+    private ProgressDialog dialog;
 
     public final static String PREFERENCES_KEY = "CONNECTION";
 
@@ -64,6 +66,7 @@ public class Onboarding extends AppCompatActivity  implements Communicator.OnCom
 
     @Override
     public void onError(String result) {
+        dialog.dismiss();
         UiHelper.showAlert(this, "Cannot establish connection: " + result);
     }
 
@@ -79,6 +82,8 @@ public class Onboarding extends AppCompatActivity  implements Communicator.OnCom
         preferences.edit().putString(KEY_SERVER_IP, getServerIp()).apply();
         preferences.edit().putInt(KEY_SERVER_PORT, getServerPort()).apply();
         preferences.edit().putString(KEY_API_KEY, getApiKey()).apply();
+
+        dialog.dismiss();
 
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
@@ -104,8 +109,13 @@ public class Onboarding extends AppCompatActivity  implements Communicator.OnCom
                     getServerPort(),
                     getApiKey(),
                     this);
+            load();
         } catch (Exception e) {
             UiHelper.showAlert(this, e.getMessage());
         }
+    }
+
+    private void load() {
+        dialog = ProgressDialog.show(this, "", "Loading. Please wait..", true);
     }
 }

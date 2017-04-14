@@ -33,6 +33,12 @@
         android:layout_height="wrap_content"
         android:text="Test lights:" />
     <Button
+        android:text="Refresh remote state"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:id="@+id/refresh_state" />
+    <Button
         android:text="Red Lights"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -33,4 +33,8 @@ public class SetColor extends Communication {
         return (pos+1) + "-" + colors[pos][0] + "," + colors[pos][1] + "," + colors[pos][2] + ";";
     }
 
+    @Override
+    public boolean isDelayNeeded() {
+        return true;
+    }
 }

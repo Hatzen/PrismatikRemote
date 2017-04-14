@@ -109,39 +109,51 @@ public class Communicator {
         startThread(commands, listener, false);
     }
 
-    public void setNotificationLight(int[][] colors) {
+    public void setNotificationLight(int[][] colors, OnCompleteListener listener) {
         ArrayList<Communication> commands = new ArrayList<>();
         commands.add(new SetColor(colors));
 
-        startThread(commands, null, false);
+        startThread(commands, listener, true);
     }
 
-    public void unsetNotificationLight() {
-        setProfile(RemoteState.getInstance().getProfile(), null);
-        /*
-        TODO: Check if this behavior of keeping lock is needed anywhere.
-        //in: setNotificationLight
-        startThread(commands, null, true);
-
-        //then here:
+    public void unsetNotificationLight(OnCompleteListener listener) {
         if (blocker == null)
             return;
         synchronized (blocker) {
             blocker.notify();
         }
         blocker = null;
-        */
     }
 
     private void startThread(ArrayList<Communication> commands, OnCompleteListener listener, boolean keepLock) {
         surroundLock(commands);
         surroundStartAndEnd(commands);
 
-        blocker = new Executor(commands, listener);
-        if (keepLock) {
+        if(keepLock && blocker != null) {
+            // TODO: Check how useful unsetting is (in EVERY case).
+            if(listener != null) {
+                listener.onError("Lock already Blocked!");
+                return;
+            }
+            else {
+                Log.e("Error!!", "Lock already Blocked!");
+                unsetNotificationLight(listener);
+                // TODO: Avoid time waiting (HACK for finishing unsetting).
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        Executor executor = new Executor(commands, listener);
+        if (keepLock && blocker == null) {
+            blocker = executor;
             blocker.setKeepLock();
         }
-        new Thread(blocker).start();
+
+        new Thread(executor).start();
     }
 
     private void surroundLock(ArrayList<Communication> commands) {
@@ -161,11 +173,12 @@ public class Communicator {
     private class Executor implements Runnable {
         private ArrayList<Communication> commands;
         private OnCompleteListener listener;
-        private boolean keepLock = false;
+        private boolean keepLock;
 
         Executor(ArrayList<Communication> commands, OnCompleteListener listener ) {
             this.commands = commands;
             this.listener = listener;
+            keepLock = false;
         }
 
         public void setKeepLock() {
@@ -186,13 +199,11 @@ public class Communicator {
                 in.readLine();
 
                 for (Communication communication : commands) {
-
                     if((communication instanceof Unlock) && keepLock) {
                         try {
                             synchronized (this) {
                                 wait();
                             }
-                            //
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -213,6 +224,15 @@ public class Communicator {
                     }
                     if(listener != null)
                         listener.onStepCompleted(communication);
+
+                    // Sometimes after set the get returns old data.
+                    //if(communication.isNeedsDelay()) {
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    //}
                 }
 
                 out.close();

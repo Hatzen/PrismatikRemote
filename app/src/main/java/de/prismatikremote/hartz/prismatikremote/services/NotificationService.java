@@ -4,7 +4,6 @@ package de.prismatikremote.hartz.prismatikremote.services;
 import android.content.Context;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
-import android.util.Log;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -40,25 +39,25 @@ public class NotificationService extends NotificationListenerService {
 
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn) {
-        Log.i("Msg","Notification Removed");
         refreshLights();
     }
 
     private void refreshLights() {
-        if(getActiveNotifications().length == 0) {
-            Communicator.getInstance().unsetNotificationLight();
-        }
-
         HashMap<String, ColorObject> colorObjects = Notifications.loadSerializedColors(getBaseContext());
 
         HashMap<StatusBarNotification,Integer> occurence = new HashMap();
-
+        boolean lightsOff = true;
         for (StatusBarNotification sbn : getActiveNotifications()) {
             ColorObject colorObject = colorObjects.get(sbn.getPackageName());
             if (colorObject != null && colorObject.regard) {
+                lightsOff = false;
                 Integer count = occurence.get(sbn);
                 occurence.put(sbn, count != null ? count+1 : 0);
             }
+        }
+        if(lightsOff) {
+            Communicator.getInstance().unsetNotificationLight(null);
+            return;
         }
 
         // Sort Map to occurence
@@ -104,9 +103,8 @@ public class NotificationService extends NotificationListenerService {
             }
         }
 
-        Communicator.getInstance().setNotificationLight(colors);
+        Communicator.getInstance().setNotificationLight(colors, null);
     }
-
 
     private int[] getColorForStatusBarNotification(StatusBarNotification sbn, HashMap<String, ColorObject> colors) {
         int[] color = new int[3];

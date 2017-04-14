@@ -2,7 +2,6 @@ package de.prismatikremote.hartz.prismatikremote.activities;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,16 +33,10 @@ public class Profiles extends Drawer implements AdapterView.OnItemClickListener,
                         if (convertView == null) {
                             convertView = super.getView(position, convertView, parent);
                         }
-
-                        //ImageView img = (ImageView)convertView.findViewById(R.id.imageView1);;
-
                         if ( RemoteState.getInstance().getProfiles().indexOf(RemoteState.getInstance().getProfile()) == position) {
-                        //if(profilesListView.isItemChecked(position)){
-                            convertView.setBackgroundColor(Color.LTGRAY);// here you can set any color.
-                            //img.setImageResource(R.drawable.img1);//img1 is stored in your rawable folder.
+                            convertView.setBackgroundColor(Color.LTGRAY);
                         }else{
-                            convertView.setBackgroundColor(0);
-                            //img.setImageResource(R.drawable.img2);
+                            convertView.setBackgroundColor(0);;
                         }
 
                         return convertView;
@@ -57,14 +50,14 @@ public class Profiles extends Drawer implements AdapterView.OnItemClickListener,
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.d("Taagsagsgasg", "Clicked" + position);
+        load();
         final String item = (String) parent.getItemAtPosition(position);
         Communicator.getInstance().setProfile(item, this);
     }
 
     @Override
     public void onError(String result) {
-
+        dialog.dismiss();
     }
 
     @Override
@@ -78,6 +71,7 @@ public class Profiles extends Drawer implements AdapterView.OnItemClickListener,
             @Override
             public void run() {
                 setSelection();
+                dialog.dismiss();
             }
         });
     }
