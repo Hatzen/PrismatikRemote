@@ -2,8 +2,10 @@ package de.prismatikremote.hartz.prismatikremote.services;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
+import android.util.Log;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -11,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.prismatikremote.hartz.prismatikremote.activities.Notifications;
+import de.prismatikremote.hartz.prismatikremote.activities.Onboarding;
 import de.prismatikremote.hartz.prismatikremote.backend.Communicator;
 import de.prismatikremote.hartz.prismatikremote.backend.RemoteState;
 import de.prismatikremote.hartz.prismatikremote.helper.UiHelper;
@@ -43,22 +46,36 @@ public class NotificationService extends NotificationListenerService {
     }
 
     private void refreshLights() {
+        Log.e("error", "uneneror11");
         HashMap<String, ColorObject> colorObjects = Notifications.loadSerializedColors(getBaseContext());
 
+        SharedPreferences preferences = getSharedPreferences(Onboarding.PREFERENCES_KEY, MODE_PRIVATE);
+        if(!preferences.getString(Onboarding.KEY_SERVER_IP, "").equals("")) {
+            Communicator.getInstance().setConnection(
+                    preferences.getString(Onboarding.KEY_SERVER_IP, ""),
+                    preferences.getInt(Onboarding.KEY_SERVER_PORT, 3636),
+                    preferences.getString(Onboarding.KEY_API_KEY, ""),
+                    null);
+        }
+        Log.e("error", "uneneror1");
         HashMap<StatusBarNotification,Integer> occurence = new HashMap();
         boolean lightsOff = true;
         for (StatusBarNotification sbn : getActiveNotifications()) {
             ColorObject colorObject = colorObjects.get(sbn.getPackageName());
             if (colorObject != null && colorObject.regard) {
+                Log.e("error", "uneneror1");
+
                 lightsOff = false;
                 Integer count = occurence.get(sbn);
                 occurence.put(sbn, count != null ? count+1 : 0);
             }
         }
+        Log.e("error", "uneneror2");
         if(lightsOff) {
             Communicator.getInstance().unsetNotificationLight(null);
             return;
         }
+        Log.e("error", "uneneror3");
 
         // Sort Map to occurence
         Object[] a = occurence.entrySet().toArray();

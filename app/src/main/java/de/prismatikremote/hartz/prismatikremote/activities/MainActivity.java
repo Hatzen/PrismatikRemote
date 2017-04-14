@@ -1,9 +1,13 @@
 package de.prismatikremote.hartz.prismatikremote.activities;
 
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+
+import com.jrummyapps.android.colorpicker.ColorPickerDialog;
+import com.jrummyapps.android.colorpicker.ColorPickerDialogListener;
 
 import de.prismatikremote.hartz.prismatikremote.R;
 import de.prismatikremote.hartz.prismatikremote.backend.Communicator;
@@ -14,7 +18,7 @@ import de.prismatikremote.hartz.prismatikremote.backend.commands.GetStatus;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.SetColor;
 import de.prismatikremote.hartz.prismatikremote.helper.UiHelper;
 
-public class MainActivity extends Drawer implements Communicator.OnCompleteListener, View.OnClickListener {
+public class MainActivity extends Drawer implements Communicator.OnCompleteListener, View.OnClickListener, ColorPickerDialogListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +38,7 @@ public class MainActivity extends Drawer implements Communicator.OnCompleteListe
         Button refreshState = (Button) findViewById(R.id.refresh_state);
         refreshState.setOnClickListener(this);
 
-        Button redLights = (Button) findViewById(R.id.red_lights);
+        Button redLights = (Button) findViewById(R.id.set_lights);
         redLights.setOnClickListener(this);
 
         Button unsetLights = (Button) findViewById(R.id.unset_lights);
@@ -97,18 +101,29 @@ public class MainActivity extends Drawer implements Communicator.OnCompleteListe
             Communicator.getInstance().toggleMode(this);
         } else if ( view == findViewById(R.id.refresh_state)) {
             Communicator.getInstance().refreshState(this);
-        } else if ( view == findViewById(R.id.red_lights)) {
-            int[][] colors = new int[10][3];
-            for (int i = 0; i < colors.length; i++) {
-                colors[i][0] = 255;
-                colors[i][1] = 0;
-                colors[i][2] = 0;
-            }
-            Communicator.getInstance().setNotificationLight(colors, this);
+        } else if ( view == findViewById(R.id.set_lights)) {
+            ColorPickerDialog.newBuilder()
+                    .setDialogType(ColorPickerDialog.TYPE_CUSTOM)
+                    .setAllowPresets(false)
+                    .setDialogId(0)
+                    .show(this);
         } else if ( view == findViewById(R.id.unset_lights)) {
             Communicator.getInstance().unsetNotificationLight(this);
             dialog.dismiss();
         }
     }
 
+    @Override
+    public void onColorSelected(int dialogId, @ColorInt int color) {
+        int[][] colors = new int[10][3];
+        for (int i = 0; i < colors.length; i++) {
+            colors[i] = UiHelper.toColorInts(color);
+        }
+        Communicator.getInstance().setNotificationLight(colors, this);
+    }
+
+    @Override
+    public void onDialogDismissed(int dialogId) {
+
+    }
 }
