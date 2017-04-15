@@ -71,6 +71,10 @@ public class Communicator {
         refreshState(listener);
     }
 
+    public boolean hasBlocker() {
+        return blocker != null;
+    }
+
     public void refreshState(OnCompleteListener listener) {
         ArrayList<Communication> commands = new ArrayList<>();
         commands.add(new GetStatus());
@@ -131,20 +135,17 @@ public class Communicator {
 
         if(keepLock && blocker != null) {
             // TODO: Check how useful unsetting is (in EVERY case).
-            if(listener != null) {
+            if(listener != null)
                 listener.onError("Lock already Blocked!");
-                return;
+            Log.e("Error!!", "Lock already Blocked!");
+            unsetNotificationLight(listener);
+            // TODO: Avoid time waiting (HACK for finishing unsetting).
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-            else {
-                Log.e("Error!!", "Lock already Blocked!");
-                unsetNotificationLight(listener);
-                // TODO: Avoid time waiting (HACK for finishing unsetting).
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
+
         }
 
         Executor executor = new Executor(commands, listener);

@@ -4,18 +4,22 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import de.prismatikremote.hartz.prismatikremote.R;
+import de.prismatikremote.hartz.prismatikremote.backend.Communicator;
 
 /**
  * Created by kaiha on 09.04.2017.
@@ -37,8 +41,25 @@ public class Drawer extends AppCompatActivity {
         setContentView(R.layout.drawer);
 
         setupDrawer();
+
+
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_TITLE);
+        getSupportActionBar().setCustomView(R.layout.tab_header);
+
+        ImageView lockView = (ImageView) findViewById(R.id.lock_image);
+        int color = Color.parseColor("#FFFFFF");
+        lockView.setColorFilter(color);
+        setLockVisible(Communicator.getInstance().hasBlocker());
     }
 
+    protected void setLockVisible(boolean visible) {
+        ImageView lockView = (ImageView) findViewById(R.id.lock_image);
+        if (visible) {
+            lockView.setVisibility(View.VISIBLE);
+        } else {
+            lockView.setVisibility(View.INVISIBLE);
+        }
+    }
 
     @Override
     public void onResume()

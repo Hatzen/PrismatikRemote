@@ -110,6 +110,7 @@ public class MainActivity extends Drawer implements Communicator.OnCompleteListe
         } else if ( view == findViewById(R.id.unset_lights)) {
             Communicator.getInstance().unsetNotificationLight(this);
             dialog.dismiss();
+            setLockVisible(false);
         }
     }
 
@@ -120,10 +121,11 @@ public class MainActivity extends Drawer implements Communicator.OnCompleteListe
             colors[i] = UiHelper.toColorInts(color);
         }
         Communicator.getInstance().setNotificationLight(colors, this);
+        setLockVisible(true);
     }
 
     @Override
     public void onDialogDismissed(int dialogId) {
-
+        dialog.dismiss();
     }
 }
