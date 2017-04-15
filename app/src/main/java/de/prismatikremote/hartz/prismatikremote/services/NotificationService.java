@@ -54,8 +54,7 @@ public class NotificationService extends NotificationListenerService {
             Communicator.getInstance().setConnection(
                     preferences.getString(Onboarding.KEY_SERVER_IP, ""),
                     preferences.getInt(Onboarding.KEY_SERVER_PORT, 3636),
-                    preferences.getString(Onboarding.KEY_API_KEY, ""),
-                    null);
+                    preferences.getString(Onboarding.KEY_API_KEY, ""));
         }
         Log.e("error", "uneneror1");
         HashMap<StatusBarNotification,Integer> occurence = new HashMap();

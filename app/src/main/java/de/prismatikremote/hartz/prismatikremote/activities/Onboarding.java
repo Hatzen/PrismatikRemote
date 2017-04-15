@@ -107,8 +107,8 @@ public class Onboarding extends AppCompatActivity  implements Communicator.OnCom
             Communicator.getInstance().setConnection(
                     getServerIp(),
                     getServerPort(),
-                    getApiKey(),
-                    this);
+                    getApiKey());
+            Communicator.getInstance().refreshState(this);
             load();
         } catch (Exception e) {
             UiHelper.showAlert(this, e.getMessage());

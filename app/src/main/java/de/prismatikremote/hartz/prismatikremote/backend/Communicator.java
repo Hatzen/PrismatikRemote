@@ -61,14 +61,13 @@ public class Communicator {
      * @param serverIp
      * @param serverPort
      */
-    public void setConnection(String serverIp, int serverPort, String serverKey, OnCompleteListener listener) {
+    public void setConnection(String serverIp, int serverPort, String serverKey) {
         this.serverIp = serverIp;
         this.serverPort = serverPort;
         if(serverKey.equals(""))
             this.serverKey = null;
         else
             this.serverKey = serverKey;
-        refreshState(listener);
     }
 
     public boolean hasBlocker() {
