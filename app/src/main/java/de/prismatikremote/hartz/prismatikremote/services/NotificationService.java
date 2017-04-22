@@ -33,6 +33,8 @@ public class NotificationService extends NotificationListenerService {
 
         // TODO: NotificationManager.isNotificationPolicyAccessGranted(), to check if notifications access is granted
 
+        // TODO: FIX BUG!!! Service is not using same Executor in Communicator.
+
     }
 
     @Override

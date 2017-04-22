@@ -84,6 +84,7 @@ public class Notifications extends Drawer implements Communicator.OnCompleteList
 
     @Override
     public void onClick(View view) {
+        // TODO: Remove creation of dummy events.
         if( view == findViewById(R.id.notification_dummy)) {
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(this)
