@@ -1,5 +1,6 @@
 package de.prismatikremote.hartz.prismatikremote.activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.view.LayoutInflater;
@@ -46,11 +47,20 @@ public class MainActivity extends Drawer implements Communicator.OnCompleteListe
     }
 
     @Override
-    public void onError(String result) {
+    public void onError(final String result) {
         //TODO: add param to identify source.
-        dialog.dismiss();
 
-        UiHelper.showAlert(this, result);
+        final Context context = this;
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                dialog.dismiss();
+
+                UiHelper.showAlert(context, result);
+            }
+        });
+
     }
 
     @Override

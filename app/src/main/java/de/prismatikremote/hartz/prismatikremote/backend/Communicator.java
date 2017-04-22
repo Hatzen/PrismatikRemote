@@ -14,7 +14,9 @@ import java.util.ArrayList;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.ApiKey;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.Communication;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.Exit;
+import de.prismatikremote.hartz.prismatikremote.backend.commands.GetColors;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.GetCountLeds;
+import de.prismatikremote.hartz.prismatikremote.backend.commands.GetLeds;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.GetMode;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.GetProfile;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.GetProfiles;
@@ -54,7 +56,7 @@ public class Communicator {
     private static final Communicator instance = new Communicator();
 
     // Keeps lock state (so lights keep color).
-    private Executor blocker;
+    private static Executor blocker;
 
     /**
      * Setup the Connection information.
@@ -81,6 +83,8 @@ public class Communicator {
         commands.add(new GetProfile());
         commands.add(new GetCountLeds());
         commands.add(new GetMode());
+        commands.add(new GetColors());
+        commands.add(new GetLeds());
         //TODO: Add all get commands
 
         startThread(commands, listener, false);

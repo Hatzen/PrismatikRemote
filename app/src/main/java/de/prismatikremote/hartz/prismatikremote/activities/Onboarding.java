@@ -63,7 +63,6 @@ public class Onboarding extends AppCompatActivity  implements Communicator.OnCom
         }
     }
 
-
     @Override
     public void onError(String result) {
         dialog.dismiss();

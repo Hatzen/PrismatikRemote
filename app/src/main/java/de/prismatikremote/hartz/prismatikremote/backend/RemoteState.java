@@ -1,5 +1,7 @@
 package de.prismatikremote.hartz.prismatikremote.backend;
 
+import android.graphics.Rect;
+
 import java.util.ArrayList;
 
 /**
@@ -26,10 +28,28 @@ public class RemoteState {
     private ArrayList<String> profiles;
     private String profile;
     private int countLeds;
+    private ArrayList<Rect> leds;
+    private ArrayList<Integer> colors;
 
     private static final RemoteState INSTANCE = new RemoteState();
 
     private RemoteState() {}
+
+    public ArrayList<Integer> getColors() {
+        return colors;
+    }
+
+    public void setColors(ArrayList<Integer> colors) {
+        this.colors = colors;
+    }
+
+    public ArrayList<Rect> getLeds() {
+        return leds;
+    }
+
+    public void setLeds(ArrayList<Rect> leds) {
+        this.leds = leds;
+    }
 
     public static RemoteState getInstance() {
         return INSTANCE;
