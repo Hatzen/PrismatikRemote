@@ -17,3 +17,5 @@ This app will be released in the Google Play Store.
 - [x] Turn lights on for Android notifications
 - [ ] Setup widgets (Multiple Desktop support)
 - [ ] Create custom Animations
+- [ ] Settings (and Settings-Profiles) to set Brightness etc.
+
