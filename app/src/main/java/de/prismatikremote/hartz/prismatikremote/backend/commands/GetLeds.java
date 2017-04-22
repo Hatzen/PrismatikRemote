@@ -27,10 +27,11 @@ public class GetLeds extends Communication {
 
             ArrayList<Rect> leds = new ArrayList<>();
             for (int i = 0; i < allNumbers.size(); i += 5) {
-                Rect r = new Rect(Integer.valueOf(allNumbers.get(i+1)),
-                        Integer.valueOf(allNumbers.get(i+2)),
-                        Integer.valueOf(allNumbers.get(i+3)),
-                        Integer.valueOf(allNumbers.get(i+4)));
+                int left = Integer.valueOf(allNumbers.get(i+1));
+                int top = Integer.valueOf(allNumbers.get(i+2));
+                int right = left + Integer.valueOf(allNumbers.get(i+3));
+                int bottom = top + Integer.valueOf(allNumbers.get(i+4));
+                Rect r = new Rect(left, top, right, bottom);
                 leds.add(r);
             }
             RemoteState.getInstance().setLeds(leds);
