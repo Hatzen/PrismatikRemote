@@ -36,7 +36,7 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".helper.ColorPickerActivity"></activity>
+        <activity android:name=".helper.ColorPickerActivity"/>
     </application>
 
 </manifest>

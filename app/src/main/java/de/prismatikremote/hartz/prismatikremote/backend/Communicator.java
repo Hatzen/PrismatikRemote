@@ -14,16 +14,22 @@ import java.util.ArrayList;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.ApiKey;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.Communication;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.Exit;
+import de.prismatikremote.hartz.prismatikremote.backend.commands.GetBrightness;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.GetColors;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.GetCountLeds;
+import de.prismatikremote.hartz.prismatikremote.backend.commands.GetGamma;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.GetLeds;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.GetMode;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.GetProfile;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.GetProfiles;
+import de.prismatikremote.hartz.prismatikremote.backend.commands.GetSmoothness;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.GetStatus;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.Lock;
+import de.prismatikremote.hartz.prismatikremote.backend.commands.SetBrightness;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.SetColor;
+import de.prismatikremote.hartz.prismatikremote.backend.commands.SetGamma;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.SetProfile;
+import de.prismatikremote.hartz.prismatikremote.backend.commands.SetSmoothness;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.ToggleMode;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.ToggleStatus;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.Unlock;
@@ -91,6 +97,9 @@ public class Communicator {
         commands.add(new GetMode());
         commands.add(new GetColors());
         commands.add(new GetLeds());
+        commands.add(new GetGamma());
+        commands.add(new GetBrightness());
+        commands.add(new GetSmoothness());
         //TODO: Add all get commands
 
         startThread(commands, listener, false);
@@ -110,6 +119,18 @@ public class Communicator {
         commands.add(new GetMode());
         commands.add(new ToggleMode());
         commands.add(new GetMode());
+
+        startThread(commands, listener, false);
+    }
+
+    public void setSettings(double gamma, int brightness, int smoothness, OnCompleteListener listener) {
+        ArrayList<Communication> commands = new ArrayList<>();
+        commands.add(new SetGamma(gamma));
+        commands.add(new SetBrightness(brightness));
+        commands.add(new SetSmoothness(smoothness));
+        commands.add(new GetGamma());
+        commands.add(new GetBrightness());
+        commands.add(new GetSmoothness());
 
         startThread(commands, listener, false);
     }

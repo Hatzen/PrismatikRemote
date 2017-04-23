@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:id="@+id/activity_settings"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,4 +16,46 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/allowNotifications" />
-</RelativeLayout>
+
+    <TextView
+        android:text="Gamma:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="1000"
+        android:progress="1"
+        android:layout_marginBottom="16dp"
+        android:id="@+id/gamma" />
+
+    <TextView
+        android:text="Brightness:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="100"
+        android:progress="1"
+        android:layout_marginBottom="16dp"
+        android:id="@+id/brightness" />
+
+    <TextView
+        android:text="Smoothness:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="255"
+        android:progress="1"
+        android:layout_marginBottom="16dp"
+        android:id="@+id/smoothness" />
+
+    <Button
+        android:text="Apply Settings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/apply_settings" />
+</LinearLayout>

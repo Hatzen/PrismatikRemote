@@ -30,6 +30,9 @@ public class RemoteState {
     private int countLeds;
     private ArrayList<Rect> leds;
     private ArrayList<Integer> colors;
+    private double gamma;
+    private int brightness;
+    private int smoothness;
 
     private static final RemoteState INSTANCE = new RemoteState();
 
@@ -102,4 +105,29 @@ public class RemoteState {
     public void setMode(Mode mode) {
         this.mode = mode;
     }
+
+    public double getGamma() {
+        return gamma;
+    }
+
+    public void setGamma(double gamma) {
+        this.gamma = gamma;
+    }
+
+    public int getBrightness() {
+        return brightness;
+    }
+
+    public void setBrightness(int brightness) {
+        this.brightness = brightness;
+    }
+
+    public int getSmoothness() {
+        return smoothness;
+    }
+
+    public void setSmoothness(int smoothness) {
+        this.smoothness = smoothness;
+    }
+
 }
