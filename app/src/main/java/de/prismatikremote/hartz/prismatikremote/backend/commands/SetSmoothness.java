@@ -13,7 +13,7 @@ public class SetSmoothness extends Communication {
 
     @Override
     public String getCommand() {
-        return "setsmoothness:" + smoothness;
+        return "setsmooth:" + smoothness;
     }
 
     @Override

@@ -1,7 +1,6 @@
 package de.prismatikremote.hartz.prismatikremote.activities;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,8 +22,6 @@ public class Settings extends Drawer implements View.OnClickListener, Communicat
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         mDrawerLayout.addView(inflater.inflate(R.layout.activity_settings, null));
 
-        Button allowNotifications = (Button) findViewById(R.id.allowNotifications);
-        allowNotifications.setOnClickListener(this);
         Button applySettings = (Button) findViewById(R.id.apply_settings);
         applySettings.setOnClickListener(this);
         updateUi();
@@ -38,10 +35,7 @@ public class Settings extends Drawer implements View.OnClickListener, Communicat
 
     @Override
     public void onClick(View v) {
-        if(v == findViewById(R.id.allowNotifications)) {
-            Intent intent = new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");
-            startActivity(intent);
-        } else if(v == findViewById(R.id.apply_settings)) {
+        if(v == findViewById(R.id.apply_settings)) {
             double gamma = ((SeekBar) findViewById(R.id.gamma)).getProgress() / 100;
             int brightness = ((SeekBar) findViewById(R.id.brightness)).getProgress();
             int smoothness = ((SeekBar) findViewById(R.id.smoothness)).getProgress();

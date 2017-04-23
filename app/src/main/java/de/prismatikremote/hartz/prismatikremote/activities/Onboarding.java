@@ -60,7 +60,7 @@ public class Onboarding extends AppCompatActivity  implements Communicator.OnCom
             save();
         }
         else if (scanButton == view) {
-
+            UiHelper.showAlert(this, "Scan not supported yet. :(");
         }
     }
 

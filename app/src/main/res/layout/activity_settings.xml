@@ -10,49 +10,48 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="de.prismatikremote.hartz.prismatikremote.activities.Settings">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:text="Gamma:"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="1000"
+            android:progress="1"
+            android:layout_marginBottom="16dp"
+            android:id="@+id/gamma" />
 
-    <Button
-        android:text="Allow Notifications"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/allowNotifications" />
+        <TextView
+            android:text="Brightness:"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:progress="1"
+            android:layout_marginBottom="16dp"
+            android:id="@+id/brightness" />
 
-    <TextView
-        android:text="Gamma:"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <SeekBar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="1000"
-        android:progress="1"
-        android:layout_marginBottom="16dp"
-        android:id="@+id/gamma" />
-
-    <TextView
-        android:text="Brightness:"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <SeekBar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="100"
-        android:progress="1"
-        android:layout_marginBottom="16dp"
-        android:id="@+id/brightness" />
-
-    <TextView
-        android:text="Smoothness:"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <SeekBar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="255"
-        android:progress="1"
-        android:layout_marginBottom="16dp"
-        android:id="@+id/smoothness" />
-
+        <TextView
+            android:text="Smoothness:"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="255"
+            android:progress="1"
+            android:layout_marginBottom="16dp"
+            android:id="@+id/smoothness" />
+    </LinearLayout>
     <Button
         android:text="Apply Settings"
         android:layout_width="match_parent"

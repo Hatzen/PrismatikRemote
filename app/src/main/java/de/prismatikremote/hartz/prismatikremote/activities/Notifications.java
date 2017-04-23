@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -15,6 +17,7 @@ import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +44,7 @@ import de.prismatikremote.hartz.prismatikremote.backend.Communicator;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.Communication;
 import de.prismatikremote.hartz.prismatikremote.helper.UiHelper;
 import de.prismatikremote.hartz.prismatikremote.model.ColorObject;
+import de.prismatikremote.hartz.prismatikremote.services.NotificationService;
 
 // TODO: Tidy up.
 public class Notifications extends Drawer implements Communicator.OnCompleteListener, View.OnClickListener, ColorPickerDialogListener {
@@ -80,6 +84,41 @@ public class Notifications extends Drawer implements Communicator.OnCompleteList
         colors = loadSerializedColors(this);
 
         new LoadApplications().execute();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        checkNotificationAccess();
+
+    }
+
+    private void checkNotificationAccess() {
+        ComponentName cn = new ComponentName(this, NotificationService.class);
+        String flat = android.provider.Settings.Secure.getString(this.getContentResolver(), "enabled_notification_listeners");
+        final boolean enabled = flat != null && flat.contains(cn.flattenToString());
+
+        if (!enabled) {
+            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which){
+                        case DialogInterface.BUTTON_POSITIVE:
+                            Intent intent = new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");
+                            startActivity(intent);
+                            break;
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            finish();
+                            break;
+                    }
+                }
+            };
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setCancelable(false);
+            builder.setMessage("Notification access not granted yet. Do you want to?").setPositiveButton("Yes", dialogClickListener)
+                    .setNegativeButton("No", dialogClickListener).show();
+        }
     }
 
     @Override

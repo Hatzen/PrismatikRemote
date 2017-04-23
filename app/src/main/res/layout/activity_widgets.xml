@@ -17,6 +17,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="number"
         android:id="@+id/screen_count" />
 
     <TextView
@@ -32,6 +33,7 @@
             android:textAlignment="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:inputType="number"
             android:id="@+id/resolution_width" />
         <TextView
             android:text="x"
@@ -42,8 +44,13 @@
             android:textAlignment="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:inputType="number"
             android:id="@+id/resolution_height" />
     </LinearLayout>
+    <TextView
+        android:text="Screens:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
     <FrameLayout
         android:id="@+id/screen_canvas"
         android:layout_weight="1"

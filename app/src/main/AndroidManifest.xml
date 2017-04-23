@@ -25,7 +25,9 @@
         <activity android:name=".activities.Notifications" />
         <activity android:name=".activities.Console" />
         <activity android:name=".activities.Settings" />
-        <activity android:name=".activities.Widgets" />
+        <activity
+            android:name=".activities.Widgets"
+            android:windowSoftInputMode="stateUnchanged" />
 
         <service
             android:name=".services.NotificationService"
