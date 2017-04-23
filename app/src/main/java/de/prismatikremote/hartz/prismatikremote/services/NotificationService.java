@@ -14,8 +14,8 @@ import java.util.Map;
 
 import de.prismatikremote.hartz.prismatikremote.activities.Notifications;
 import de.prismatikremote.hartz.prismatikremote.activities.Onboarding;
-import de.prismatikremote.hartz.prismatikremote.backend.Communicator;
 import de.prismatikremote.hartz.prismatikremote.backend.RemoteState;
+import de.prismatikremote.hartz.prismatikremote.helper.Helper;
 import de.prismatikremote.hartz.prismatikremote.helper.UiHelper;
 import de.prismatikremote.hartz.prismatikremote.model.ColorObject;
 
@@ -53,7 +53,7 @@ public class NotificationService extends NotificationListenerService {
 
         SharedPreferences preferences = getSharedPreferences(Onboarding.PREFERENCES_KEY, MODE_PRIVATE);
         if(!preferences.getString(Onboarding.KEY_SERVER_IP, "").equals("")) {
-            Communicator.getInstance().setConnection(
+            Helper.getCommunicator(this).setConnection(
                     preferences.getString(Onboarding.KEY_SERVER_IP, ""),
                     preferences.getInt(Onboarding.KEY_SERVER_PORT, 3636),
                     preferences.getString(Onboarding.KEY_API_KEY, ""));
@@ -72,8 +72,9 @@ public class NotificationService extends NotificationListenerService {
             }
         }
         Log.e("error", "uneneror2");
+        // There are no notifications to display. So set lights off (Use prismatik default lights).
         if(lightsOff) {
-            Communicator.getInstance().unsetNotificationLight(null);
+            Helper.getCommunicator(this).unsetNotificationLight(null);
             return;
         }
         Log.e("error", "uneneror3");
@@ -121,7 +122,7 @@ public class NotificationService extends NotificationListenerService {
             }
         }
 
-        Communicator.getInstance().setNotificationLight(colors, null);
+        Helper.getCommunicator(this).setNotificationLight(colors, null);
     }
 
     private int[] getColorForStatusBarNotification(StatusBarNotification sbn, HashMap<String, ColorObject> colors) {

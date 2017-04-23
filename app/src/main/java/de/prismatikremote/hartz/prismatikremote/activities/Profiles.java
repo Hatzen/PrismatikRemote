@@ -13,6 +13,7 @@ import de.prismatikremote.hartz.prismatikremote.R;
 import de.prismatikremote.hartz.prismatikremote.backend.Communicator;
 import de.prismatikremote.hartz.prismatikremote.backend.RemoteState;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.Communication;
+import de.prismatikremote.hartz.prismatikremote.helper.Helper;
 
 public class Profiles extends Drawer implements AdapterView.OnItemClickListener, Communicator.OnCompleteListener {
 
@@ -52,7 +53,7 @@ public class Profiles extends Drawer implements AdapterView.OnItemClickListener,
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         load();
         final String item = (String) parent.getItemAtPosition(position);
-        Communicator.getInstance().setProfile(item, this);
+        Helper.getCommunicator(this).setProfile(item, this);
     }
 
     @Override

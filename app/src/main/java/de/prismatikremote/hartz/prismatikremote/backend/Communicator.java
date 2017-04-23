@@ -44,6 +44,12 @@ public class Communicator {
         void onSuccess();
     }
 
+    /**
+     * DO NOT USE THIS METHOD DIRECTLY. Use "Helper.getCommunicator(context)".
+     * Otherwise it might lead to multiple/different instances (on Activities and Services) of
+     * Communicator and lock lights til prismatik shut down.
+     * @return A Communicator.
+     */
     public static Communicator getInstance() {
         return instance;
     }

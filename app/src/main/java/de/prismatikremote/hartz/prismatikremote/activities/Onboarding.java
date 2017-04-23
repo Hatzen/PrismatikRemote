@@ -12,6 +12,7 @@ import android.widget.EditText;
 import de.prismatikremote.hartz.prismatikremote.R;
 import de.prismatikremote.hartz.prismatikremote.backend.Communicator;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.Communication;
+import de.prismatikremote.hartz.prismatikremote.helper.Helper;
 import de.prismatikremote.hartz.prismatikremote.helper.UiHelper;
 
 public class Onboarding extends AppCompatActivity  implements Communicator.OnCompleteListener, View.OnClickListener  {
@@ -103,11 +104,11 @@ public class Onboarding extends AppCompatActivity  implements Communicator.OnCom
 
     private void save() {
         try {
-            Communicator.getInstance().setConnection(
+            Helper.getCommunicator(this).setConnection(
                     getServerIp(),
                     getServerPort(),
                     getApiKey());
-            Communicator.getInstance().refreshState(this);
+            Helper.getCommunicator(this).refreshState(this);
             load();
         } catch (Exception e) {
             UiHelper.showAlert(this, e.getMessage());

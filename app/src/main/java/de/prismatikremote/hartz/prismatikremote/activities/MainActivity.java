@@ -17,6 +17,7 @@ import de.prismatikremote.hartz.prismatikremote.backend.commands.Communication;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.GetMode;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.GetStatus;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.SetColor;
+import de.prismatikremote.hartz.prismatikremote.helper.Helper;
 import de.prismatikremote.hartz.prismatikremote.helper.UiHelper;
 
 public class MainActivity extends Drawer implements Communicator.OnCompleteListener, View.OnClickListener, ColorPickerDialogListener {
@@ -106,11 +107,11 @@ public class MainActivity extends Drawer implements Communicator.OnCompleteListe
     public void onClick(View view) {
         load();
         if( view == findViewById(R.id.toggle_power)) {
-            Communicator.getInstance().togglePower(this);
+            Helper.getCommunicator(this).togglePower(this);
         } else if ( view == findViewById(R.id.toggle_mode)) {
-            Communicator.getInstance().toggleMode(this);
+            Helper.getCommunicator(this).toggleMode(this);
         } else if ( view == findViewById(R.id.refresh_state)) {
-            Communicator.getInstance().refreshState(this);
+            Helper.getCommunicator(this).refreshState(this);
         } else if ( view == findViewById(R.id.set_lights)) {
             ColorPickerDialog.newBuilder()
                     .setDialogType(ColorPickerDialog.TYPE_CUSTOM)
@@ -118,7 +119,7 @@ public class MainActivity extends Drawer implements Communicator.OnCompleteListe
                     .setDialogId(0)
                     .show(this);
         } else if ( view == findViewById(R.id.unset_lights)) {
-            Communicator.getInstance().unsetNotificationLight(this);
+            Helper.getCommunicator(this).unsetNotificationLight(this);
             dialog.dismiss();
             setLockVisible(false);
         }
@@ -130,7 +131,7 @@ public class MainActivity extends Drawer implements Communicator.OnCompleteListe
         for (int i = 0; i < colors.length; i++) {
             colors[i] = UiHelper.toColorInts(color);
         }
-        Communicator.getInstance().setNotificationLight(colors, this);
+        Helper.getCommunicator(this).setNotificationLight(colors, this);
         setLockVisible(true);
     }
 

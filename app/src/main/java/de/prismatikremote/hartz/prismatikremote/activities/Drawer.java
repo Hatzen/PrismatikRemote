@@ -19,7 +19,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import de.prismatikremote.hartz.prismatikremote.R;
-import de.prismatikremote.hartz.prismatikremote.backend.Communicator;
+import de.prismatikremote.hartz.prismatikremote.helper.Helper;
 
 /**
  * Created by kaiha on 09.04.2017.
@@ -49,7 +49,7 @@ public class Drawer extends AppCompatActivity {
         ImageView lockView = (ImageView) findViewById(R.id.lock_image);
         int color = Color.parseColor("#FFFFFF");
         lockView.setColorFilter(color);
-        setLockVisible(Communicator.getInstance().hasBlocker());
+        setLockVisible(Helper.getCommunicator(this).hasBlocker());
     }
 
     protected void setLockVisible(boolean visible) {
