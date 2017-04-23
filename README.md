@@ -14,14 +14,14 @@ This app will be released in the Google Play Store.
 
 # Main-Features
 
-- [ ] Scan for avaiable connections
-- [x] Turn on/off lights
+- [x] Turn lights on/off
 - [x] Choose profile
 - [x] Turn lights on for Android notifications
   - [ ] FIX BUG: Currently not working from outside off the app :(
 - [x] Show widgets (Multiple Desktop support)
   - [ ] Setup widgets
-- [ ] Create custom Animations
 - [x] Settings to set Brightness etc.
-  - [ ] and store and load Setting-Profiles
+  - [ ] store and load Setting-Profiles
+- [ ] Create custom Animations
+- [ ] Scan for avaiable connections
 
