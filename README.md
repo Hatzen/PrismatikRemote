@@ -1,8 +1,15 @@
+
+
 # PrismatikRemote
 Remote Control App for Prismatik/Lightpack on Android.  
 It is based on the Prismatik Fork https://github.com/psieg/Lightpack/, because of a better support and nice features like sound visualisation. The app may contain unsupported features for the original Prismatik software.  
 
 This app will be released in the Google Play Store.  
+
+# Documentation
+
+Please see the wiki for more information :)  
+https://github.com/Hatzen/PrismatikRemote/wiki
 
 # Preview Images
 <div>
