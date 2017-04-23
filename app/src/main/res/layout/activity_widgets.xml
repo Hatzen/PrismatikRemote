@@ -46,7 +46,6 @@
     </LinearLayout>
     <FrameLayout
         android:id="@+id/screen_canvas"
-        android:background="@color/colorBlack"
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

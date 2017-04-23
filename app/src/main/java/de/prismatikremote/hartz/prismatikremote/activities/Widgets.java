@@ -4,9 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -61,11 +62,11 @@ public class Widgets extends Drawer implements Communicator.OnCompleteListener {
                 preferences.edit().putInt(KEY_SCREEN_HEIGHT, getScreenHeight()).apply();
                 preferences.edit().putInt(KEY_SCREEN_WIDTH, getScreenWidth()).apply();
 
-                updateCanvas();
+                setupScreens();
             }
         });
 
-        updateCanvas();
+        setupScreens();
     }
 
     private int getScreenWidth() {
@@ -80,6 +81,10 @@ public class Widgets extends Drawer implements Communicator.OnCompleteListener {
         return Integer.valueOf(screenCountEditText.getText().toString());
     }
 
+    private double getScreenHeightFactor() {
+        return (double) getScreenHeight()/getScreenWidth();
+    }
+
     private int getCurrentScreen() {
         ArrayList<Rect> rects = RemoteState.getInstance().getLeds();
 
@@ -90,53 +95,81 @@ public class Widgets extends Drawer implements Communicator.OnCompleteListener {
         return -1;
     }
 
-    private void updateCanvas() {
-        // TODO: Display count of Screens. And select a screen to set leds to this (with selection of andromeda, cassi... etc.)
-        // TODO: Maybe set custom color per led (on long press widget?)
+    private void setupScreens() {
         final Context context = this;
-
         final FrameLayout screenCanvas = (FrameLayout) findViewById(R.id.screen_canvas);
         screenCanvas.removeAllViews();
 
         screenCanvas.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                double scaleX = (double) screenCanvas.getWidth() / getScreenWidth();
-                double scaleY = (double) screenCanvas.getHeight() / getScreenHeight();
+                double screenWidth = (double) screenCanvas.getWidth() / getScreenCount();
+                double screenHeight = screenWidth * getScreenHeightFactor();
 
-                double translateX = (double) getScreenWidth()*getCurrentScreen();
-                // TODO: calculate..
-                double translateY = 0;
-
-
-                Log.e("Taggaasas", "ScaleX: " + scaleX + " & ScaleY: " + scaleY + " & translateX:" + translateX);
-
-                ArrayList<Integer> colors = RemoteState.getInstance().getColors();
-                ArrayList<Rect> rects = RemoteState.getInstance().getLeds();
-                for(int i = 0; i < rects.size(); i++) {
-                    TextView rect = new TextView(context);
-                    rect.setText("" + i);
-                    rect.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                    rect.setBackgroundColor(colors.get(i));
-
-                    Log.e("Rect", rects.get(i).left + " ," + rects.get(i).top + " ," + rects.get(i).width() + " ," + rects.get(i).height() + " ,");
-
-                    int width = (int) (rects.get(i).width() * scaleX);
-                    int height = (int) (rects.get(i).height() *scaleY);
-                    int left = (int) ((rects.get(i).left - translateX) * scaleX);
-                    int top = (int) ((rects.get(i).top - translateY) * scaleY);
-
-                    Log.e("Scaled Rect:", left + " ," + top + " ," + width + " ," + height + " ,");
+                for(int i = 0; i < getScreenCount(); i++) {
+                    final FrameLayout screen = new FrameLayout(context);
+                    int width = (int) (screenWidth);
+                    int height = (int) (screenHeight);
+                    int left = (int) (i * screenWidth);
+                    int top = (screenCanvas.getHeight() / 2) - (height / 2);
 
                     FrameLayout.LayoutParams llp = new FrameLayout.LayoutParams(width, height);
                     llp.setMargins(left, top , 0, 0);
-                    rect.setLayoutParams(llp);
+                    screen.setLayoutParams(llp);
+                    screenCanvas.addView(screen);
 
-                    screenCanvas.addView(rect);
+                    TextView rect = new TextView(context);
+                    rect.setText("" + (i+1));
+                    rect.setGravity(Gravity.CENTER);
+                    rect.setTextColor(getResources().getColor(R.color.colorWhite));
+                    rect.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                    FrameLayout.LayoutParams llp2 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                    rect.setLayoutParams(llp2);
+                    screen.addView(rect);
+
+                    if(i == getCurrentScreen()) {
+                        screen.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                            @Override
+                            public void onGlobalLayout() {
+                                updateCanvas(screen);
+                                screen.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                            }
+                        });
+                    }
                 }
                 screenCanvas.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
+    }
+
+    private void updateCanvas(ViewGroup screen) {
+        double scaleX = (double) screen.getWidth() / getScreenWidth();
+        double scaleY = (double) screen.getHeight() / getScreenHeight();
+
+        double translateX = (double) getScreenWidth()*getCurrentScreen();
+        // TODO: calculate..
+        double translateY = 0;
+
+        ArrayList<Integer> colors = RemoteState.getInstance().getColors();
+        ArrayList<Rect> rects = RemoteState.getInstance().getLeds();
+        for(int i = 0; i < rects.size(); i++) {
+            TextView rect = new TextView(this);
+            rect.setText("" + (i+1));
+
+            rect.setGravity(Gravity.CENTER);
+            rect.setBackgroundColor(colors.get(i));
+
+            int width = (int) (rects.get(i).width() * scaleX);
+            int height = (int) (rects.get(i).height() *scaleY);
+            int left = (int) ((rects.get(i).left - translateX) * scaleX);
+            int top = (int) ((rects.get(i).top - translateY) * scaleY);
+
+            FrameLayout.LayoutParams llp = new FrameLayout.LayoutParams(width, height);
+            llp.setMargins(left, top , 0, 0);
+            rect.setLayoutParams(llp);
+
+            screen.addView(rect);
+        }
     }
 
     @Override
