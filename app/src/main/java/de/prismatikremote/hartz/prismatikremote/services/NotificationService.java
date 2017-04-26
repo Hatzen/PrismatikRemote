@@ -2,7 +2,9 @@ package de.prismatikremote.hartz.prismatikremote.services;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.IBinder;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
@@ -35,6 +37,35 @@ public class NotificationService extends NotificationListenerService {
 
         // TODO: FIX BUG!!! Service is not using same Executor in Communicator.
 
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        // TODO XY: Create Communicator if not exists, write a getter for it and let service handle every tcp command..
+
+
+        Log.e("Service", "Notification Service got start by activity???");
+
+        return START_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Helper.getCommunicator(this).unsetNotificationLight(null);
+
+        Log.e("Service", "Notification Service got killed..");
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        super.onBind(intent);
+
+
+        Log.e("Service", "Notification Service got bind???");
+
+        return null;
     }
 
     @Override

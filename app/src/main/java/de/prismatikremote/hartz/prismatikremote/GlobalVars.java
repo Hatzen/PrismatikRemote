@@ -10,11 +10,19 @@ import de.prismatikremote.hartz.prismatikremote.backend.Communicator;
 
 public class GlobalVars extends Application {
 
+
+    // TODO XY: Maybe move this in the Service and let it the only reference.
     private Communicator communicator = Communicator.getInstance();
 
     // Maybe add RemoteState too..
 
     public Communicator getCommunicator(){
+
+        // TODO XY: Maybe move this in the Service and let it the only reference.
+        // and call startService()onStartCommand
+
+
+        // TODO: Maybe move this in the Service and let it the only reference.
         return communicator;
     }
 }
