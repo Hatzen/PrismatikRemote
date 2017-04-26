@@ -1,6 +1,15 @@
+
+
 # PrismatikRemote
 Remote Control App for Prismatik/Lightpack on Android.  
+It is based on the Prismatik Fork https://github.com/psieg/Lightpack/, because of a better support and nice features like sound visualisation. The app may contain unsupported features for the original Prismatik software.  
+
 This app will be released in the Google Play Store.  
+
+# Documentation & Manual
+
+Please see the wiki for more information :)  
+https://github.com/Hatzen/PrismatikRemote/wiki
 
 # Preview Images
 <div>
@@ -12,10 +21,14 @@ This app will be released in the Google Play Store.
 
 # Main-Features
 
-- [x] Turn on/off lights
+- [x] Turn lights on/off
 - [x] Choose profile
 - [x] Turn lights on for Android notifications
-- [ ] Setup widgets (Multiple Desktop support)
+  - [ ] FIX BUG: Currently not working from outside off the app :(
+- [x] Show widgets (Multiple Desktop support)
+  - [ ] Setup widgets
+- [x] Settings to set Brightness etc.
+  - [ ] store and load Setting-Profiles
 - [ ] Create custom Animations
-- [ ] Settings (and Settings-Profiles) to set Brightness etc.
+- [ ] Scan for avaiable connections
 
