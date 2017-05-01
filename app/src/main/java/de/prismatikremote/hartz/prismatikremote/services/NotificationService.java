@@ -2,9 +2,7 @@ package de.prismatikremote.hartz.prismatikremote.services;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.IBinder;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
@@ -33,13 +31,16 @@ public class NotificationService extends NotificationListenerService {
         super.onCreate();
         context = getApplicationContext();
 
+        Log.e("Service", "Notification Service created");
+
         // TODO: NotificationManager.isNotificationPolicyAccessGranted(), to check if notifications access is granted
 
         // TODO: FIX BUG!!! Service is not using same Executor in Communicator.
 
     }
 
-    @Override
+    /*@Override
+    // This Code leads to a android bug that onNotificationPosted and onNotificationRemoved are never be called again.
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         // TODO XY: Create Communicator if not exists, write a getter for it and let service handle every tcp command..
@@ -51,14 +52,6 @@ public class NotificationService extends NotificationListenerService {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Helper.getCommunicator(this).unsetNotificationLight(null);
-
-        Log.e("Service", "Notification Service got killed..");
-    }
-
-    @Override
     public IBinder onBind(Intent intent) {
         super.onBind(intent);
 
@@ -66,7 +59,16 @@ public class NotificationService extends NotificationListenerService {
         Log.e("Service", "Notification Service got bind???");
 
         return null;
+    }*/
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Helper.getCommunicator(this).unsetNotificationLight(null);
+
+        Log.e("Service", "Notification Service got killed..");
     }
+
 
     @Override
     public void onNotificationPosted(StatusBarNotification statusBarNotification) {

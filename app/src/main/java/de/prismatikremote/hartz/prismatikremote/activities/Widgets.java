@@ -142,6 +142,10 @@ public class Widgets extends Drawer implements Communicator.OnCompleteListener {
         });
     }
 
+    /**
+     * Draws the leds on the screen.
+     * @param screen
+     */
     private void updateCanvas(ViewGroup screen) {
         double scaleX = (double) screen.getWidth() / getScreenWidth();
         double scaleY = (double) screen.getHeight() / getScreenHeight();

@@ -18,6 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="number"
+        android:text="1"
         android:id="@+id/screen_count" />
 
     <TextView
@@ -34,6 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="number"
+            android:text="1920"
             android:id="@+id/resolution_width" />
         <TextView
             android:text="x"
@@ -45,6 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="number"
+            android:text="1080"
             android:id="@+id/resolution_height" />
     </LinearLayout>
     <TextView
