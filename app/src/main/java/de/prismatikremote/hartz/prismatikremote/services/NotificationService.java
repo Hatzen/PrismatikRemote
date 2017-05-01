@@ -45,6 +45,7 @@ public class NotificationService extends NotificationListenerService {
 
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn) {
+        // TODO: Check if it was a relevant notification. Or if the lights are blocked by notification light.
         refreshLights();
     }
 

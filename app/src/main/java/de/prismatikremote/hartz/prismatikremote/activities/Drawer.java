@@ -19,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import de.prismatikremote.hartz.prismatikremote.R;
+import de.prismatikremote.hartz.prismatikremote.backend.Communicator;
+import de.prismatikremote.hartz.prismatikremote.backend.commands.Communication;
 import de.prismatikremote.hartz.prismatikremote.helper.Helper;
 
 /**
@@ -49,16 +51,53 @@ public class Drawer extends AppCompatActivity {
         ImageView lockView = (ImageView) findViewById(R.id.lock_image);
         int color = Color.parseColor("#FFFFFF");
         lockView.setColorFilter(color);
+        checkLock();
+
+        ImageView refreshView = (ImageView) findViewById(R.id.load_image);
+        refreshView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refresh();
+            }
+        });
+
+        // TODO: Add buttons "reload", "mute", "unlock"
+    }
+
+    public void checkLock() {
         setLockVisible(Helper.getCommunicator(this).hasBlocker());
     }
 
-    protected void setLockVisible(boolean visible) {
+    public void setLockVisible(boolean visible) {
         ImageView lockView = (ImageView) findViewById(R.id.lock_image);
         if (visible) {
             lockView.setVisibility(View.VISIBLE);
         } else {
             lockView.setVisibility(View.INVISIBLE);
         }
+    }
+
+    protected void refresh() {
+        load();
+        Helper.getCommunicator(this).refreshState(new Communicator.OnCompleteListener() {
+            @Override
+            public void onError(String result) {
+                stopLoad();
+            }
+
+            @Override
+            public void onStepCompleted(Communication communication) {
+
+            }
+
+            @Override
+            public void onSuccess() {
+                stopLoad();
+            }
+        });
+        checkLock();
+
+        // TODO: Override this in everyActivity that might display wrong data (widgets..)
     }
 
     @Override
@@ -159,5 +198,10 @@ public class Drawer extends AppCompatActivity {
 
     protected void load() {
         dialog = ProgressDialog.show(this, "", "Loading. Please wait..", true);
+    }
+
+    protected void stopLoad() {
+        if(dialog != null)
+            dialog.dismiss();
     }
 }
