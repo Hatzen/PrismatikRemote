@@ -24,9 +24,9 @@ https://github.com/Hatzen/PrismatikRemote/wiki
 - [x] Turn lights on/off
 - [x] Choose profile
 - [x] Turn lights on for Android notifications
-  - [ ] FIX BUG: Currently not working from outside off the app :(
 - [x] Show widgets (Multiple Desktop support)
-  - [ ] Setup widgets
+  - [x] Setup widgets
+  - [ ] Setup Screens
 - [x] Settings to set Brightness etc.
   - [ ] store and load Setting-Profiles
 - [ ] Create custom Animations
