@@ -1,10 +1,12 @@
 package de.prismatikremote.hartz.prismatikremote.activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +24,7 @@ import de.prismatikremote.hartz.prismatikremote.backend.Communicator;
 import de.prismatikremote.hartz.prismatikremote.backend.RemoteState;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.Communication;
 import de.prismatikremote.hartz.prismatikremote.helper.Helper;
+import de.prismatikremote.hartz.prismatikremote.helper.UiHelper;
 
 public class Widgets extends Drawer implements Communicator.OnCompleteListener {
 
@@ -132,9 +135,27 @@ public class Widgets extends Drawer implements Communicator.OnCompleteListener {
                     rect.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            setSchema(Schema.ANDROMEDA, screenNumber);
                             Vibrator vibe = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                             vibe.vibrate(100);
+                            final CharSequence[] items = {"ANDROMEDA",
+                                    "CASSIOPEIA",
+                                    "PEGASUS"};
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(Widgets.this);
+                            builder.setTitle("Choose schema:");
+                            builder.setItems(items, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int item) {
+                                    if ( item == 0) {
+                                        setSchema(Schema.ANDROMEDA, screenNumber);
+                                    } else if (item == 1) {
+                                        setSchema(Schema.CASSIOPEIA, screenNumber);
+                                    } else if (item == 2) {
+                                        setSchema(Schema.PEGASUS, screenNumber);
+                                    }
+                                }
+                            });
+                            AlertDialog alert = builder.create();
+                            alert.show();
                         }
                     });
                     rect.setText("" + (i+1));
@@ -211,11 +232,13 @@ public class Widgets extends Drawer implements Communicator.OnCompleteListener {
                     int widerRectWidth = getScreenWidth()/percentageOfScreen;
                     int widerRectHeight = getScreenHeight()/2;
 
+                    // Bottom right.
                     int rectId = 0;
                     int x = getScreenWidth()-longerRectWidth + offsetX;
                     int y = getScreenHeight()-longerRectHeight + offsetY;
                     leds[rectId] = new Rect(x, y, x + longerRectWidth, y + longerRectHeight);
 
+                    // Right.
                     rectId++;
                     x = getScreenWidth()-widerRectWidth + offsetX;
                     y = getScreenHeight()-widerRectHeight + offsetY;
@@ -223,6 +246,68 @@ public class Widgets extends Drawer implements Communicator.OnCompleteListener {
                     rectId++;
                     x = getScreenWidth()-widerRectWidth + offsetX;
                     y = getScreenHeight()-(2*widerRectHeight) + offsetY;
+                    leds[rectId] = new Rect(x, y, x + widerRectWidth, y + widerRectHeight);
+
+                    // Top.
+                    rectId++;
+                    x = getScreenWidth()-longerRectWidth + offsetX;
+                    y = offsetY;
+                    leds[rectId] = new Rect(x, y, x + longerRectWidth, y + longerRectHeight);
+                    rectId++;
+                    x = getScreenWidth()-2*longerRectWidth + offsetX;
+                    y = offsetY;
+                    leds[rectId] = new Rect(x, y, x + longerRectWidth, y + longerRectHeight);
+                    rectId++;
+                    x = getScreenWidth()-3*longerRectWidth + offsetX;
+                    y = offsetY;
+                    leds[rectId] = new Rect(x, y, x + longerRectWidth, y + longerRectHeight);
+                    rectId++;
+                    x = getScreenWidth()-4*longerRectWidth + offsetX;
+                    y = offsetY;
+                    leds[rectId] = new Rect(x, y, x + longerRectWidth, y + longerRectHeight);
+
+                    // Left.
+                    rectId++;
+                    x = offsetX;
+                    y = getScreenHeight()-2*widerRectHeight + offsetY;
+                    leds[rectId] = new Rect(x, y, x + widerRectWidth, y + widerRectHeight);
+                    rectId++;
+                    x = offsetX;
+                    y = getScreenHeight()-widerRectHeight + offsetY;
+                    leds[rectId] = new Rect(x, y, x + widerRectWidth, y + widerRectHeight);
+
+                    // Botttom left.
+                    rectId++;
+                    x = offsetX;
+                    y = getScreenHeight()-longerRectHeight + offsetY;
+                    leds[rectId] = new Rect(x, y, x + longerRectWidth, y + longerRectHeight);
+                }
+                break;
+            // Has no bottom leds.
+            case CASSIOPEIA:
+                // TODO: Optimize/support all amount of leds and move to helper class.
+                if (leds.length == 10) {
+                    // top and bottom rects.
+                    int longerRectWidth = getScreenWidth()/4;
+                    int longerRectHeight = getScreenHeight()/percentageOfScreen;
+                    // left and right rects.
+                    int widerRectWidth = getScreenWidth()/percentageOfScreen;
+                    int widerRectHeight = getScreenHeight()/3;
+
+                    int rectId = 0;
+                    int x;
+                    int y;
+
+                    x = getScreenWidth()-widerRectWidth + offsetX;
+                    y = getScreenHeight()-widerRectHeight + offsetY;
+                    leds[rectId] = new Rect(x, y, x + widerRectWidth, y + widerRectHeight);
+                    rectId++;
+                    x = getScreenWidth()-widerRectWidth + offsetX;
+                    y = getScreenHeight()-(2*widerRectHeight) + offsetY;
+                    leds[rectId] = new Rect(x, y, x + widerRectWidth, y + widerRectHeight);
+                    rectId++;
+                    x = getScreenWidth()-widerRectWidth + offsetX;
+                    y = getScreenHeight()-(3*widerRectHeight) + offsetY;
                     leds[rectId] = new Rect(x, y, x + widerRectWidth, y + widerRectHeight);
 
                     rectId++;
@@ -244,29 +329,47 @@ public class Widgets extends Drawer implements Communicator.OnCompleteListener {
 
                     rectId++;
                     x = offsetX;
+                    y = getScreenHeight()-3*widerRectHeight + offsetY;
+                    leds[rectId] = new Rect(x, y, x + widerRectWidth, y + widerRectHeight);
+                    rectId++;
+                    x = offsetX;
                     y = getScreenHeight()-2*widerRectHeight + offsetY;
                     leds[rectId] = new Rect(x, y, x + widerRectWidth, y + widerRectHeight);
                     rectId++;
                     x = offsetX;
                     y = getScreenHeight()-widerRectHeight + offsetY;
                     leds[rectId] = new Rect(x, y, x + widerRectWidth, y + widerRectHeight);
-
-                    rectId++;
-                    x = offsetX;
-                    y = getScreenHeight()-longerRectHeight + offsetY;
-                    leds[rectId] = new Rect(x, y, x + longerRectWidth, y + longerRectHeight);
                 }
                 break;
-            case CASSIOPEIA:
-                // TODO: Implement and move to helper class.
-                // Kein unten
-                break;
+            // Has only side leds.
             case PEGASUS:
-                // Seiten
+                // left and right rects.
+                int widerRectWidth = getScreenWidth()/percentageOfScreen;
+                int widerRectHeight = getScreenHeight()/(leds.length/2);
+
+                int rectId = 0;
+                int x = getScreenWidth()-widerRectWidth + offsetX;
+                int y = getScreenHeight() + offsetY;
+
+                // 1 from bottom to top, -1 from top to bottom.
+                int direction = 1;
+
+                for(int z = 0; z < 2; z++) {
+                    for(int i = 0; i < (leds.length/2); i++) {
+                        y -= direction*widerRectHeight;
+                        leds[rectId] = new Rect(x, y, x + widerRectWidth, y + widerRectHeight);
+                        rectId++;
+                    }
+                    x = offsetX;
+                    y -= direction*widerRectHeight;
+                    direction = -1;
+                }
                 break;
         }
-        if(leds[0] == null)
+        if(leds[0] == null) {
+            UiHelper.showAlert(this, "Unsupported amount of leds for that schema.");
             return;
+        }
 
         Helper.getCommunicator(this).setLeds(leds, this);
         load();
