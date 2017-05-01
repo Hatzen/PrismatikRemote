@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
-import android.util.Log;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -30,43 +29,12 @@ public class NotificationService extends NotificationListenerService {
     public void onCreate() {
         super.onCreate();
         context = getApplicationContext();
-
-        Log.e("Service", "Notification Service created");
-
-        // TODO: NotificationManager.isNotificationPolicyAccessGranted(), to check if notifications access is granted
-
-        // TODO: FIX BUG!!! Service is not using same Executor in Communicator.
-
     }
-
-    /*@Override
-    // This Code leads to a android bug that onNotificationPosted and onNotificationRemoved are never be called again.
-    public int onStartCommand(Intent intent, int flags, int startId) {
-
-        // TODO XY: Create Communicator if not exists, write a getter for it and let service handle every tcp command..
-
-
-        Log.e("Service", "Notification Service got start by activity???");
-
-        return START_STICKY;
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        super.onBind(intent);
-
-
-        Log.e("Service", "Notification Service got bind???");
-
-        return null;
-    }*/
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         Helper.getCommunicator(this).unsetNotificationLight(null);
-
-        Log.e("Service", "Notification Service got killed..");
     }
 
 
@@ -81,7 +49,7 @@ public class NotificationService extends NotificationListenerService {
     }
 
     private void refreshLights() {
-        Log.e("error", "uneneror11");
+        // TODO: Splitup this code in useful modules.
         HashMap<String, ColorObject> colorObjects = Notifications.loadSerializedColors(getBaseContext());
 
         SharedPreferences preferences = getSharedPreferences(Onboarding.PREFERENCES_KEY, MODE_PRIVATE);
@@ -91,28 +59,22 @@ public class NotificationService extends NotificationListenerService {
                     preferences.getInt(Onboarding.KEY_SERVER_PORT, 3636),
                     preferences.getString(Onboarding.KEY_API_KEY, ""));
         }
-        Log.e("error", "uneneror1");
         HashMap<StatusBarNotification,Integer> occurence = new HashMap();
         boolean lightsOff = true;
         for (StatusBarNotification sbn : getActiveNotifications()) {
             ColorObject colorObject = colorObjects.get(sbn.getPackageName());
             if (colorObject != null && colorObject.regard) {
-                Log.e("error", "uneneror1");
-
                 lightsOff = false;
                 Integer count = occurence.get(sbn);
                 occurence.put(sbn, count != null ? count+1 : 0);
             }
         }
-        Log.e("error", "uneneror2");
         // There are no notifications to display. So set lights off (Use prismatik default lights).
         if(lightsOff) {
             Helper.getCommunicator(this).unsetNotificationLight(null);
             return;
         }
-        Log.e("error", "uneneror3");
-
-        // Sort Map to occurence
+        // Sort Map to th amount of occurence of notifications per package.
         Object[] a = occurence.entrySet().toArray();
         Arrays.sort(a, new Comparator() {
             public int compare(Object o1, Object o2) {
@@ -133,8 +95,6 @@ public class NotificationService extends NotificationListenerService {
         if(lengthOfKeys < ledCount) {
             // "Stretch" them to always use all Leds.
             int stepSize = (ledCount/lengthOfKeys)+1;
-
-            // TODO: Reduce to match. (Already done?)
             for(int i = 0; i < lengthOfKeys; i++) {
                 int[] color = getColorForStatusBarNotification(
                         ((Map.Entry<StatusBarNotification, Integer>)a[i]).getKey()

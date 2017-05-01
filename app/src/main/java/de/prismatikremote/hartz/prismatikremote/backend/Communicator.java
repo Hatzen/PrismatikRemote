@@ -73,10 +73,6 @@ public class Communicator {
     // Keeps lock state (so lights keep color).
     private static Executor blocker;
 
-    private Communicator() {
-        Log.e("Communicator", "CREATED COMMUNICATOR!!!!!!!!!!!!!!!!!!!!!!!");
-    }
-
     /**
      * Setup the Connection information.
      * @param serverIp
@@ -169,8 +165,6 @@ public class Communicator {
         if (blocker == null)
             return;
         synchronized (blocker) {
-            //blocker.notify();
-
             blocker.notifyAll();
         }
     }
@@ -186,14 +180,12 @@ public class Communicator {
         surroundStartAndEnd(commands);
 
         // TODO: Check how useful unsetting is (in EVERY case). Write a Updater, get commands work without block/lock.
-        Log.e("Executor", "Want Executor!!!!!!!!!!!!!!!!!!!!!!!" + blocker);
+        // TODO: Notifications shouldnt overwrite setLight, animation etc.
         while (blocker != null) {
             if(listener != null)
                 listener.onError("Lock already Blocked!");
             Log.e("Error!!", "Lock already Blocked!");
             unsetNotificationLight(null);
-            Log.e("Executor", "Want Executor!!!!!!!!!!!!!!!!!!!!!!!" + blocker);
-            // TODO: Try to avoid time waiting (HACK for finishing unsetting).
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -233,8 +225,6 @@ public class Communicator {
             this.commands = commands;
             this.listener = listener;
             keepLock = false;
-
-            Log.e("Executor", "CREATED Executor!!!!!!!!!!!!!!!!!!!!!!!" + blocker);
         }
 
         public void setKeepLock() {
