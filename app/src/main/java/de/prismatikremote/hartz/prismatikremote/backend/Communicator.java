@@ -46,6 +46,7 @@ public class Communicator {
     /**
      * Interface to inform caller that all commands have finished.
      */
+    // TODO: Call these methods always on gui thread.
     public interface OnCompleteListener {
         void onError(String result);
         void onStepCompleted(Communication communication);
@@ -71,6 +72,10 @@ public class Communicator {
 
     // Keeps lock state (so lights keep color).
     private static Executor blocker;
+
+    private Communicator() {
+        Log.e("Communicator", "CREATED COMMUNICATOR!!!!!!!!!!!!!!!!!!!!!!!");
+    }
 
     /**
      * Setup the Connection information.
@@ -164,9 +169,10 @@ public class Communicator {
         if (blocker == null)
             return;
         synchronized (blocker) {
-            blocker.notify();
+            //blocker.notify();
+
+            blocker.notifyAll();
         }
-        blocker = null;
     }
 
     /**
@@ -179,19 +185,20 @@ public class Communicator {
         surroundLock(commands);
         surroundStartAndEnd(commands);
 
-        if(keepLock && blocker != null) {
-            // TODO: Check how useful unsetting is (in EVERY case).
+        // TODO: Check how useful unsetting is (in EVERY case). Write a Updater, get commands work without block/lock.
+        Log.e("Executor", "Want Executor!!!!!!!!!!!!!!!!!!!!!!!" + blocker);
+        while (blocker != null) {
             if(listener != null)
                 listener.onError("Lock already Blocked!");
             Log.e("Error!!", "Lock already Blocked!");
-            unsetNotificationLight(listener);
-            // TODO: Avoid time waiting (HACK for finishing unsetting).
+            unsetNotificationLight(null);
+            Log.e("Executor", "Want Executor!!!!!!!!!!!!!!!!!!!!!!!" + blocker);
+            // TODO: Try to avoid time waiting (HACK for finishing unsetting).
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
         }
 
         Executor executor = new Executor(commands, listener);
@@ -226,6 +233,8 @@ public class Communicator {
             this.commands = commands;
             this.listener = listener;
             keepLock = false;
+
+            Log.e("Executor", "CREATED Executor!!!!!!!!!!!!!!!!!!!!!!!" + blocker);
         }
 
         public void setKeepLock() {
@@ -296,6 +305,7 @@ public class Communicator {
                 listener.onSuccess();
             Console.writeLine("---");
             Log.e(TAG,"------------------------------------------------");
+            blocker = null;
         }
     }
 
