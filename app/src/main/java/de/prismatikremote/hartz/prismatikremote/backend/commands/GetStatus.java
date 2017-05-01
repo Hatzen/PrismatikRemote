@@ -9,6 +9,7 @@ import de.prismatikremote.hartz.prismatikremote.backend.RemoteState;
 public class GetStatus extends Communication {
     private static String TAG = "GetStatus";
     public static final String RESPOND_ON = "status:on";
+    public static final String RESPOND_OFF = "status:off";
 
     @Override
     public String getCommand() {
@@ -34,6 +35,6 @@ public class GetStatus extends Communication {
         }
         RemoteState.getInstance().setStatus(currentStatus);
 
-        return response.equals(GetStatus.RESPOND_ON);
+        return response.equals(RESPOND_ON) || response.equals(RESPOND_OFF);
     }
 }
