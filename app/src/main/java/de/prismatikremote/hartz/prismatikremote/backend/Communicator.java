@@ -1,5 +1,6 @@
 package de.prismatikremote.hartz.prismatikremote.backend;
 
+import android.graphics.Rect;
 import android.util.Log;
 
 import com.jraska.console.Console;
@@ -28,6 +29,7 @@ import de.prismatikremote.hartz.prismatikremote.backend.commands.Lock;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.SetBrightness;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.SetColor;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.SetGamma;
+import de.prismatikremote.hartz.prismatikremote.backend.commands.SetLeds;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.SetProfile;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.SetSmoothness;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.ToggleMode;
@@ -143,6 +145,14 @@ public class Communicator {
         startThread(commands, listener, false);
     }
 
+    public void setLeds(Rect[] leds, OnCompleteListener listener) {
+        ArrayList<Communication> commands = new ArrayList<>();
+        commands.add(new SetLeds(leds));
+        commands.add(new GetLeds());
+
+        startThread(commands, listener, false);
+    }
+
     public void setNotificationLight(int[][] colors, OnCompleteListener listener) {
         ArrayList<Communication> commands = new ArrayList<>();
         commands.add(new SetColor(colors));
@@ -159,6 +169,12 @@ public class Communicator {
         blocker = null;
     }
 
+    /**
+     * Starts an executor to execute a list of commands on the prismatik server.
+     * @param commands List of commands.
+     * @param listener gets called after each command and if errors occurs.
+     * @param keepLock boolean indicating wether the lock should be kept until a specific condition is met (e.g. unlockLights gets called).
+     */
     private void startThread(ArrayList<Communication> commands, OnCompleteListener listener, boolean keepLock) {
         surroundLock(commands);
         surroundStartAndEnd(commands);

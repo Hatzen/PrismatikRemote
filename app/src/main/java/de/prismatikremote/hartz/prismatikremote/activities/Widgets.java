@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -19,8 +21,15 @@ import de.prismatikremote.hartz.prismatikremote.R;
 import de.prismatikremote.hartz.prismatikremote.backend.Communicator;
 import de.prismatikremote.hartz.prismatikremote.backend.RemoteState;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.Communication;
+import de.prismatikremote.hartz.prismatikremote.helper.Helper;
 
 public class Widgets extends Drawer implements Communicator.OnCompleteListener {
+
+    public enum Schema {
+        ANDROMEDA,
+        CASSIOPEIA,
+        PEGASUS
+    }
 
     public final static String PREFERENCES_WIDGETS_KEY = "CONNECTION";
 
@@ -119,6 +128,15 @@ public class Widgets extends Drawer implements Communicator.OnCompleteListener {
                     screenCanvas.addView(screen);
 
                     TextView rect = new TextView(context);
+                    final int screenNumber = i;
+                    rect.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            setSchema(Schema.ANDROMEDA, screenNumber);
+                            Vibrator vibe = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                            vibe.vibrate(100);
+                        }
+                    });
                     rect.setText("" + (i+1));
                     rect.setGravity(Gravity.CENTER);
                     rect.setTextColor(getResources().getColor(R.color.colorWhite));
@@ -176,9 +194,93 @@ public class Widgets extends Drawer implements Communicator.OnCompleteListener {
         }
     }
 
+    private void setSchema(Schema schema, int screen) {
+        Rect[] leds = new Rect[RemoteState.getInstance().getCountLeds()];
+
+        int offsetX = screen*getScreenWidth();
+        int offsetY = 0; // TODO: Do calculation here.
+        int percentageOfScreen = 10;
+
+        switch (schema) {
+            case ANDROMEDA:
+                if (leds.length == 10) {
+                    // top and bottom rects.
+                    int longerRectWidth = getScreenWidth()/4;
+                    int longerRectHeight = getScreenHeight()/percentageOfScreen;
+                    // left and right rects.
+                    int widerRectWidth = getScreenWidth()/percentageOfScreen;
+                    int widerRectHeight = getScreenHeight()/2;
+
+                    int rectId = 0;
+                    int x = getScreenWidth()-longerRectWidth + offsetX;
+                    int y = getScreenHeight()-longerRectHeight + offsetY;
+                    leds[rectId] = new Rect(x, y, x + longerRectWidth, y + longerRectHeight);
+
+                    rectId++;
+                    x = getScreenWidth()-widerRectWidth + offsetX;
+                    y = getScreenHeight()-widerRectHeight + offsetY;
+                    leds[rectId] = new Rect(x, y, x + widerRectWidth, y + widerRectHeight);
+                    rectId++;
+                    x = getScreenWidth()-widerRectWidth + offsetX;
+                    y = getScreenHeight()-(2*widerRectHeight) + offsetY;
+                    leds[rectId] = new Rect(x, y, x + widerRectWidth, y + widerRectHeight);
+
+                    rectId++;
+                    x = getScreenWidth()-longerRectWidth + offsetX;
+                    y = offsetY;
+                    leds[rectId] = new Rect(x, y, x + longerRectWidth, y + longerRectHeight);
+                    rectId++;
+                    x = getScreenWidth()-2*longerRectWidth + offsetX;
+                    y = offsetY;
+                    leds[rectId] = new Rect(x, y, x + longerRectWidth, y + longerRectHeight);
+                    rectId++;
+                    x = getScreenWidth()-3*longerRectWidth + offsetX;
+                    y = offsetY;
+                    leds[rectId] = new Rect(x, y, x + longerRectWidth, y + longerRectHeight);
+                    rectId++;
+                    x = getScreenWidth()-4*longerRectWidth + offsetX;
+                    y = offsetY;
+                    leds[rectId] = new Rect(x, y, x + longerRectWidth, y + longerRectHeight);
+
+                    rectId++;
+                    x = offsetX;
+                    y = getScreenHeight()-2*widerRectHeight + offsetY;
+                    leds[rectId] = new Rect(x, y, x + widerRectWidth, y + widerRectHeight);
+                    rectId++;
+                    x = offsetX;
+                    y = getScreenHeight()-widerRectHeight + offsetY;
+                    leds[rectId] = new Rect(x, y, x + widerRectWidth, y + widerRectHeight);
+
+                    rectId++;
+                    x = offsetX;
+                    y = getScreenHeight()-longerRectHeight + offsetY;
+                    leds[rectId] = new Rect(x, y, x + longerRectWidth, y + longerRectHeight);
+                }
+                break;
+            case CASSIOPEIA:
+                // TODO: Implement and move to helper class.
+                // Kein unten
+                break;
+            case PEGASUS:
+                // Seiten
+                break;
+        }
+        if(leds[0] == null)
+            return;
+
+        Helper.getCommunicator(this).setLeds(leds, this);
+        load();
+
+    }
+
     @Override
     public void onError(String result) {
-
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                dialog.dismiss();
+            }
+        });
     }
 
     @Override
@@ -187,5 +289,13 @@ public class Widgets extends Drawer implements Communicator.OnCompleteListener {
 
     @Override
     public void onSuccess() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                dialog.dismiss();
+                Toast.makeText(Widgets.this, "Successfully set leds!", Toast.LENGTH_LONG);
+                setupScreens();
+            }
+        });
     }
 }
