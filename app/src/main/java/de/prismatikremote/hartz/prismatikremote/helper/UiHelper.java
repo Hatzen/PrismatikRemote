@@ -1,6 +1,7 @@
 package de.prismatikremote.hartz.prismatikremote.helper;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
@@ -16,7 +17,15 @@ public class UiHelper {
                 .setTitle("Error")
                 .setMessage(message)
                 .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton("Ok", null)
                 .show();
+    }
+
+    public static void showYesNoAlert(Context context, String message, DialogInterface.OnClickListener dialogClickListener ) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setCancelable(false);
+        builder.setMessage(message).setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
     }
 
     /**

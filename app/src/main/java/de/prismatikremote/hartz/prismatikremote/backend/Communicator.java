@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -35,6 +36,7 @@ import de.prismatikremote.hartz.prismatikremote.backend.commands.SetSmoothness;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.ToggleMode;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.ToggleStatus;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.Unlock;
+import de.prismatikremote.hartz.prismatikremote.helper.NetworkHelper;
 
 /**
  * Created by kaiha on 08.04.2017.
@@ -44,7 +46,7 @@ public class Communicator {
     private static String TAG = "Communicator";
 
     /**
-     * Interface to inform caller that all commands have finished.
+     * Interface to inform caller that commands have finished.
      */
     // TODO: Call these methods always on gui thread.
     public interface OnCompleteListener {
@@ -54,7 +56,7 @@ public class Communicator {
     }
 
     /**
-     * DO NOT USE THIS METHOD DIRECTLY. Use "Helper.getCommunicator(context)".
+     * DO NOT USE THIS METHOD DIRECTLY. Use "NetworkHelper.getCommunicator(context)".
      * Otherwise it might lead to multiple/different instances (on Activities and Services) of
      * Communicator and lock lights til prismatik shut down.
      * @return A Communicator.
@@ -157,6 +159,7 @@ public class Communicator {
     public void setNotificationLight(int[][] colors, OnCompleteListener listener) {
         ArrayList<Communication> commands = new ArrayList<>();
         commands.add(new SetColor(colors));
+        commands.add(new GetColors());
 
         startThread(commands, listener, true);
     }
@@ -237,7 +240,9 @@ public class Communicator {
             PrintWriter out;
             BufferedReader in;
             try {
-                pingSocket = new Socket(serverIp, serverPort);
+                pingSocket = new Socket();
+                pingSocket.connect(new InetSocketAddress(serverIp, serverPort), NetworkHelper.DEFAULT_TIMEOUT);
+
                 out = new PrintWriter(pingSocket.getOutputStream(), true);
                 in = new BufferedReader(new InputStreamReader(pingSocket.getInputStream()));
 

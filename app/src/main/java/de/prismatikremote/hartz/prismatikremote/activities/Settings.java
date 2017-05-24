@@ -11,7 +11,7 @@ import de.prismatikremote.hartz.prismatikremote.R;
 import de.prismatikremote.hartz.prismatikremote.backend.Communicator;
 import de.prismatikremote.hartz.prismatikremote.backend.RemoteState;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.Communication;
-import de.prismatikremote.hartz.prismatikremote.helper.Helper;
+import de.prismatikremote.hartz.prismatikremote.helper.NetworkHelper;
 import de.prismatikremote.hartz.prismatikremote.helper.UiHelper;
 
 public class Settings extends Drawer implements View.OnClickListener, Communicator.OnCompleteListener  {
@@ -40,7 +40,7 @@ public class Settings extends Drawer implements View.OnClickListener, Communicat
             int brightness = ((SeekBar) findViewById(R.id.brightness)).getProgress();
             int smoothness = ((SeekBar) findViewById(R.id.smoothness)).getProgress();
 
-            Helper.getCommunicator(this).setSettings(gamma, brightness, smoothness, this);
+            NetworkHelper.getCommunicator(this).setSettings(gamma, brightness, smoothness, this);
             load();
         }
     }

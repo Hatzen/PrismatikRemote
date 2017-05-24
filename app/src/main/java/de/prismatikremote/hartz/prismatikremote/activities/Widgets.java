@@ -23,7 +23,7 @@ import de.prismatikremote.hartz.prismatikremote.R;
 import de.prismatikremote.hartz.prismatikremote.backend.Communicator;
 import de.prismatikremote.hartz.prismatikremote.backend.RemoteState;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.Communication;
-import de.prismatikremote.hartz.prismatikremote.helper.Helper;
+import de.prismatikremote.hartz.prismatikremote.helper.NetworkHelper;
 import de.prismatikremote.hartz.prismatikremote.helper.UiHelper;
 
 public class Widgets extends Drawer implements Communicator.OnCompleteListener {
@@ -78,6 +78,12 @@ public class Widgets extends Drawer implements Communicator.OnCompleteListener {
             }
         });
 
+        setupScreens();
+    }
+
+    @Override
+    protected void refresh() {
+        super.refresh();
         setupScreens();
     }
 
@@ -371,7 +377,7 @@ public class Widgets extends Drawer implements Communicator.OnCompleteListener {
             return;
         }
 
-        Helper.getCommunicator(this).setLeds(leds, this);
+        NetworkHelper.getCommunicator(this).setLeds(leds, this);
         load();
 
     }

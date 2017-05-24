@@ -17,7 +17,6 @@ import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,11 +112,7 @@ public class Notifications extends Drawer implements Communicator.OnCompleteList
                     }
                 }
             };
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setCancelable(false);
-            builder.setMessage("Notification access not granted yet. Do you want to?").setPositiveButton("Yes", dialogClickListener)
-                    .setNegativeButton("No", dialogClickListener).show();
+            UiHelper.showYesNoAlert(this, "Notification access not granted yet. Do you want to?", dialogClickListener);
         }
     }
 

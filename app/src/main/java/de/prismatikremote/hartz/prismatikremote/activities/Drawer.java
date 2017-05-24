@@ -21,7 +21,7 @@ import android.widget.ListView;
 import de.prismatikremote.hartz.prismatikremote.R;
 import de.prismatikremote.hartz.prismatikremote.backend.Communicator;
 import de.prismatikremote.hartz.prismatikremote.backend.commands.Communication;
-import de.prismatikremote.hartz.prismatikremote.helper.Helper;
+import de.prismatikremote.hartz.prismatikremote.helper.NetworkHelper;
 
 /**
  * Created by kaiha on 09.04.2017.
@@ -65,7 +65,7 @@ public class Drawer extends AppCompatActivity {
     }
 
     public void checkLock() {
-        setLockVisible(Helper.getCommunicator(this).hasBlocker());
+        setLockVisible(NetworkHelper.getCommunicator(this).hasBlocker());
     }
 
     public void setLockVisible(boolean visible) {
@@ -77,9 +77,12 @@ public class Drawer extends AppCompatActivity {
         }
     }
 
+    /**
+     * When this mehthod gets overriden it should be called per super.refresh().
+     */
     protected void refresh() {
         load();
-        Helper.getCommunicator(this).refreshState(new Communicator.OnCompleteListener() {
+        NetworkHelper.getCommunicator(this).refreshState(new Communicator.OnCompleteListener() {
             @Override
             public void onError(String result) {
                 stopLoad();
@@ -107,6 +110,42 @@ public class Drawer extends AppCompatActivity {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         }
+
+        // TODO: MAKE IT CLEAN!
+        // TODO: MAKE IT CLEAN!
+        // TODO: MAKE IT CLEAN!
+        load();
+        NetworkHelper.getCommunicator(this).refreshState(new Communicator.OnCompleteListener() {
+            @Override
+            public void onError(String result) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        stopLoad();
+
+                        Intent intent = new Intent(Drawer.this, Onboarding.class);
+                        startActivity(intent);
+                        //finish();
+                    }
+                });
+            }
+
+            @Override
+            public void onStepCompleted(Communication communication) {
+
+            }
+
+            @Override
+            public void onSuccess() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        stopLoad();
+                    }
+                });
+            }
+        });
+        // TODO: Check for valid connection. --> Networkhelper.
     }
 
     private void setupDrawer() {
