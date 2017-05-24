@@ -6,6 +6,11 @@ It is based on the Prismatik Fork https://github.com/psieg/Lightpack/, because o
 
 This app will be released in the Google Play Store.  
 
+# Download
+
+https://github.com/Hatzen/PrismatikRemote/releases/tag/0.5b
+
+
 # Documentation & Manual
 
 Please see the wiki for more information :)  
