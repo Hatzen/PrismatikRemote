@@ -30,5 +30,5 @@ https://github.com/Hatzen/PrismatikRemote/wiki
 - [x] Settings to set Brightness etc.
   - [ ] store and load Setting-Profiles
 - [ ] Create custom Animations
-- [ ] Scan for avaiable connections
+- [x] Scan for avaiable connections
 
