@@ -1,5 +1,5 @@
 
-[![Actions Status](https://github.com/Hatzen/PrismatikRemote/workflows/android/badge.svg)](https://github.com/Hatzen/PrismatikRemote/actions)
+[![Actions Status](https://github.com/Hatzen/PrismatikRemote/workflows/Android%20CI/badge.svg)](https://github.com/Hatzen/PrismatikRemote/actions)
 # PrismatikRemote
 Remote Control App for Prismatik/Lightpack on Android.  
 It is based on the Prismatik Fork https://github.com/psieg/Lightpack/, because of a better support and nice features like sound visualisation. The app may contain unsupported features for the original Prismatik software.  
